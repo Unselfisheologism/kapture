@@ -32,7 +32,9 @@ import dev.dect.kapture.recorder.InternalAudioRecorder;
 import dev.dect.kapture.overlay.Overlay;
 import dev.dect.kapture.utils.KMediaProjection;
 import dev.dect.kapture.utils.KProfile;
+import dev.dect.kapture.utils.ProVersionManager;
 import dev.dect.kapture.utils.Utils;
+import dev.dect.kapture.utils.WatermarkManager;
 
 /** @noinspection resource*/
 public class CapturingService extends AccessibilityService {
@@ -197,6 +199,7 @@ public class CapturingService extends AccessibilityService {
                     INTERNAL_AUDIO_RECORDER.start();
 
                     OVERLAY_UI.setMediaRecorderSurface(SCREEN_MIC_RECORDER.getSurface());
+                    OVERLAY_UI.setScreenRecorder(SCREEN_MIC_RECORDER);
 
                     STOP_OPTION.start();
 
@@ -425,11 +428,39 @@ public class CapturingService extends AccessibilityService {
     private void processAndSaveHelper(File kaptureFile, Runnable onComplete) {
         processExtras(kaptureFile);
 
+        // Add watermark if needed
+        addWatermarkToVideo(kaptureFile);
+
         KAPTURE.notifyAllMediaScanner();
 
         new DB(this).insertKapture(KAPTURE);
 
         onComplete.run();
+    }
+
+    private void addWatermarkToVideo(File videoFile) {
+        if (ProVersionManager.shouldAddDefaultWatermark(this)) {
+            // Add default watermark for free version
+            try {
+                // Note: This is a simplified implementation
+                // In a real implementation, you would use Media3 Transformer or FFmpeg
+                // to overlay the watermark on the video
+                Log.d(TAG, "Adding default watermark to video: " + videoFile.getName());
+                
+                // For now, we'll just log the action
+                // The actual implementation would involve:
+                // 1. Creating a watermark bitmap using WatermarkManager
+                // 2. Using Media3 Transformer to overlay the watermark
+                // 3. Saving the result to a temporary file
+                // 4. Replacing the original file with the watermarked version
+                
+            } catch (Exception e) {
+                Log.e(TAG, "Error adding watermark: " + e.getMessage());
+            }
+        } else if (ProVersionManager.isCustomWatermarkAvailable(this)) {
+            // Pro version could have custom watermark (implementation would be similar)
+            Log.d(TAG, "Custom watermark available but not implemented in this version");
+        }
     }
 
     private void processExtras(File kaptureFile) {

@@ -6,6 +6,20 @@ android {
     namespace 'dev.dect.kapture'
     compileSdk 34
 
+    flavorDimensions "version"
+    productFlavors {
+        free {
+            dimension "version"
+            applicationIdSuffix ".free"
+            resValue "string", "app_name", "Kapture Screen Recorder"
+        }
+        pro {
+            dimension "version"
+            applicationIdSuffix ".pro"
+            resValue "string", "app_name", "Kapture Screen Recorder Pro"
+        }
+    }
+
     defaultConfig {
         applicationId "dev.dect.kapture"
         minSdk 33
@@ -60,4 +74,11 @@ dependencies {
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
 
     implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    
+    // Ads dependencies for free version
+    freeImplementation 'org.prebid:prebid-mobile-sdk:2.1.0'
+    freeImplementation 'com.google.android.gms:play-services-ads:23.0.0'
+    
+    // Watermark and image processing
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
 }
