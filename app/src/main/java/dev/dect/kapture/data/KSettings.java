@@ -80,7 +80,9 @@ public class KSettings {
                           IS_TO_BEFORE_START_LAUNCH_APP,
                           IS_TO_SHOW_SHORTCUTS_BUTTON_ON_MENU,
                           IS_TO_OPEN_SHORTCUTS_ON_POPUP,
-                          IS_TO_MERGE_INTERNAL_AUDIO;
+                          IS_TO_MERGE_INTERNAL_AUDIO,
+                          IS_TO_USE_TAP_TO_ZOOM,
+                          IS_TO_USE_CUSTOM_WATERMARK;
 
     private final int VIDEO_RESOLUTION,
                       VIDEO_QUALITY,
@@ -101,18 +103,25 @@ public class KSettings {
                       IMAGE_SIZE,
                       BEFORE_START_MEDIA_VOLUME_PERCENTAGE,
                       AUDIO_SAMPLE_RATE,
-                      AUDIO_QUALITY;
+                      AUDIO_QUALITY,
+                      CUSTOM_WATERMARK_POSITION,
+                      CUSTOM_WATERMARK_OPACITY,
+                      CUSTOM_WATERMARK_SIZE;
 
     private final File SAVE_LOCATION,
                        SAVE_SCREENSHOT_LOCATION;
 
     private final String TEXT_TEXT,
-                         TEXT_COLOR,
-                         TEXT_BACKGROUND,
-                         TEXT_FONT_PATH,
-                         IMAGE_PATH,
-                         BEFORE_START_URL,
-                         BEFORE_START_LAUNCH_APP_PACKAGE;
+                          TEXT_COLOR,
+                          TEXT_BACKGROUND,
+                          TEXT_FONT_PATH,
+                          IMAGE_PATH,
+                          BEFORE_START_URL,
+                          BEFORE_START_LAUNCH_APP_PACKAGE,
+                          CUSTOM_WATERMARK_TEXT,
+                          CUSTOM_WATERMARK_IMAGE_PATH;
+
+    private final float TAP_TO_ZOOM_FACTOR;
 
     private JSONArray SHORTCUTS_BUTTON_ON_MENU;
 
@@ -224,6 +233,16 @@ public class KSettings {
 
         this.AUDIO_SAMPLE_RATE = spProfile.getInt(Constants.Sp.Profile.AUDIO_SAMPLE_RATE, DefaultSettings.AUDIO_SAMPLE_RATE);
         this.AUDIO_QUALITY = spProfile.getInt(Constants.Sp.Profile.AUDIO_QUALITY_bitRate, DefaultSettings.AUDIO_QUALITY_bitRate);
+
+        this.IS_TO_USE_TAP_TO_ZOOM = spProfile.getBoolean(Constants.Sp.Profile.IS_TO_USE_TAP_TO_ZOOM, DefaultSettings.IS_TO_USE_TAP_TO_ZOOM);
+        this.TAP_TO_ZOOM_FACTOR = spProfile.getFloat(Constants.Sp.Profile.TAP_TO_ZOOM_FACTOR, DefaultSettings.TAP_TO_ZOOM_FACTOR);
+
+        this.IS_TO_USE_CUSTOM_WATERMARK = spProfile.getBoolean(Constants.Sp.Profile.IS_TO_USE_CUSTOM_WATERMARK, DefaultSettings.IS_TO_USE_CUSTOM_WATERMARK);
+        this.CUSTOM_WATERMARK_TEXT = spProfile.getString(Constants.Sp.Profile.CUSTOM_WATERMARK_TEXT, DefaultSettings.CUSTOM_WATERMARK_TEXT);
+        this.CUSTOM_WATERMARK_IMAGE_PATH = spProfile.getString(Constants.Sp.Profile.CUSTOM_WATERMARK_IMAGE_PATH, DefaultSettings.CUSTOM_WATERMARK_IMAGE_PATH);
+        this.CUSTOM_WATERMARK_POSITION = spProfile.getInt(Constants.Sp.Profile.CUSTOM_WATERMARK_POSITION, Gravity.END | Gravity.BOTTOM);
+        this.CUSTOM_WATERMARK_OPACITY = spProfile.getInt(Constants.Sp.Profile.CUSTOM_WATERMARK_OPACITY, DefaultSettings.CUSTOM_WATERMARK_OPACITY);
+        this.CUSTOM_WATERMARK_SIZE = spProfile.getInt(Constants.Sp.Profile.CUSTOM_WATERMARK_SIZE, DefaultSettings.CUSTOM_WATERMARK_SIZE);
 
         this.SAVE_LOCATION = KFile.getSavingLocation(ctx);
 
@@ -576,6 +595,42 @@ public class KSettings {
 
     public boolean isToStartMenuMinimized() {
         return IS_TO_START_MENU_MINIMIZED;
+    }
+
+    public boolean isToUseTapToZoom() {
+        return IS_TO_USE_TAP_TO_ZOOM && ProVersionManager.isProVersion(CONTEXT);
+    }
+
+    public float getTapToZoomFactor() {
+        return TAP_TO_ZOOM_FACTOR;
+    }
+
+    public boolean isToUseCustomWatermark() {
+        return IS_TO_USE_CUSTOM_WATERMARK && ProVersionManager.isProVersion(CONTEXT);
+    }
+
+    public String getCustomWatermarkText() {
+        return CUSTOM_WATERMARK_TEXT;
+    }
+
+    public String getCustomWatermarkImagePath() {
+        return CUSTOM_WATERMARK_IMAGE_PATH;
+    }
+
+    public int getCustomWatermarkPosition() {
+        return CUSTOM_WATERMARK_POSITION;
+    }
+
+    public int getCustomWatermarkOpacity() {
+        return CUSTOM_WATERMARK_OPACITY;
+    }
+
+    public int getCustomWatermarkSize() {
+        return CUSTOM_WATERMARK_SIZE;
+    }
+
+    public boolean shouldShowDefaultWatermark() {
+        return ProVersionManager.shouldShowDefaultWatermark(CONTEXT);
     }
 
     public boolean isToShowUndoRedoButtonOnDrawMenu() {

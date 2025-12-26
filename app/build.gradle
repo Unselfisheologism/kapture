@@ -20,6 +20,23 @@ android {
         }
     }
 
+    flavorDimensions "version"
+
+    productFlavors {
+        free {
+            dimension "version"
+            applicationIdSuffix ".free"
+            buildConfigField "boolean", "IS_FREE_VERSION", "true"
+            buildConfigField "boolean", "IS_PRO_VERSION", "false"
+        }
+        pro {
+            dimension "version"
+            applicationIdSuffix ".pro"
+            buildConfigField "boolean", "IS_FREE_VERSION", "false"
+            buildConfigField "boolean", "IS_PRO_VERSION", "true"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -41,6 +58,10 @@ android {
             useLegacyPackaging = true
         }
     }
+
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
@@ -60,4 +81,7 @@ dependencies {
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
 
     implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+
+    // Google Play Billing
+    implementation 'com.android.billingclient:billing:6.0.1'
 }

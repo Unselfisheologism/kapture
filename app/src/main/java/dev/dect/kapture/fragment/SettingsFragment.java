@@ -59,6 +59,7 @@ import dev.dect.kapture.data.Constants;
 import dev.dect.kapture.data.DefaultSettings;
 import dev.dect.kapture.data.KSettings;
 import dev.dect.kapture.data.KSharedPreferences;
+import dev.dect.kapture.data.ProVersionManager;
 import dev.dect.kapture.popup.DialogPopup;
 import dev.dect.kapture.popup.InputPopup;
 import dev.dect.kapture.popup.PickerAppPopup;
@@ -312,11 +313,78 @@ public class SettingsFragment extends Fragment {
         concatAdapter.addAdapter(buildAndGetExtraVideoGroupAdapter(settings));
         concatAdapter.addAdapter(buildAndGetExtraAudioGroupAdapter(settings));
         concatAdapter.addAdapter(buildAndGetWifiShareGroupAdapter());
+
+        // Add Pro features group for free version
+        if (ProVersionManager.shouldShowAds(CONTEXT)) {
+            concatAdapter.addAdapter(buildAndGetProGroupAdapter(settings));
+        }
+
         concatAdapter.addAdapter(buildAndGetAppGroupAdapter());
 
         RECYCLER_VIEW.setLayoutManager(new LinearLayoutManager(CONTEXT));
 
         RECYCLER_VIEW.setAdapter(concatAdapter);
+    }
+
+    /**
+     * Build Pro features settings group for free version.
+     */
+    private ListGroup.Adapter buildAndGetProGroupAdapter(KSettings settings) {
+        final ConcatAdapter concatAdapter = new ConcatAdapter();
+
+        // Pro upgrade button
+        final ArrayList<ListButton> listButtons0 = new ArrayList<>();
+
+        listButtons0.add(
+            new ListButton(
+                R.string.setting_pro_upgrade,
+                R.string.setting_pro_upgrade_description,
+                () -> {
+                    if (getActivity() instanceof MainActivity) {
+                        ((MainActivity) getActivity()).showProUpgradeDialog();
+                    }
+                },
+                true
+            )
+        );
+
+        concatAdapter.addAdapter(new ListButton.Adapter(listButtons0));
+
+        // Tap-to-Zoom settings (Pro exclusive) - only show if pro
+        if (ProVersionManager.isProVersion(CONTEXT)) {
+            final ArrayList<ListSwitch> listSwitches0 = new ArrayList<>();
+
+            listSwitches0.add(
+                new ListSwitch(
+                    R.string.setting_tap_to_zoom,
+                    R.string.setting_tap_to_zoom_description,
+                    Constants.Sp.Profile.IS_TO_USE_TAP_TO_ZOOM,
+                    settings.isToUseTapToZoom(),
+                    false
+                )
+            );
+
+            concatAdapter.addAdapter(new ListSwitch.Adapter(listSwitches0, false));
+        }
+
+        // Watermark settings - only show if pro
+        if (ProVersionManager.isProVersion(CONTEXT)) {
+            final ArrayList<ListSwitch> listSwitches1 = new ArrayList<>();
+
+            listSwitches1.add(
+                new ListSwitch(
+                    R.string.setting_watermark_custom,
+                    R.string.setting_watermark_custom_description,
+                    Constants.Sp.Profile.IS_TO_USE_CUSTOM_WATERMARK,
+                    settings.isToUseCustomWatermark(),
+                    true
+                )
+            );
+
+            concatAdapter.addAdapter(new ListSwitch.Adapter(listSwitches1, true));
+        }
+
+        return new ListGroup.Adapter(new ListGroup(R.string.setting_group_pro, concatAdapter));
     }
 
     private ListGroup.Adapter buildAndGetFolderGroupAdapter(KSettings settings) {

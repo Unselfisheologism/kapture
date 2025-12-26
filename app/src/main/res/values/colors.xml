@@ -241,4 +241,8 @@
     <color name="pill_text_active">@color/main</color>
 
     <color name="image_preview_helper">@color/kapture_image_helper</color>
+
+    <!-- Ad colors -->
+    <color name="ad_banner_placeholder">#E0E0E0</color>
+    <color name="ad_banner_text">#666666</color>
 </resources>

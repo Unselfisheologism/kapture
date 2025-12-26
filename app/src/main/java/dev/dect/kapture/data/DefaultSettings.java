@@ -55,7 +55,11 @@ public class DefaultSettings {
         IS_TO_SHOW_SHORTCUTS_BUTTON_ON_MENU = false,
         IS_TO_OPEN_SHORTCUTS_ON_POPUP = false,
         INSTALLER_IS_TO_WRAP_TEXT = true,
-        IS_TO_MERGE_INTERNAL_AUDIO = true;
+        IS_TO_MERGE_INTERNAL_AUDIO = true,
+        IS_TO_USE_TAP_TO_ZOOM = false,
+        IS_TO_USE_CUSTOM_WATERMARK = false,
+        CUSTOM_WATERMARK_OPACITY = 80,
+        CUSTOM_WATERMARK_SIZE = 24;
 
     public static final int
         VIDEO_RESOLUTION = -1,
@@ -77,7 +81,8 @@ public class DefaultSettings {
         STOP_ON_BATTERY_LEVEL_LEVEL = 30,
         BEFORE_START_MEDIA_VOLUME_PERCENTAGE = 50,
         AUDIO_SAMPLE_RATE = 44100,
-        AUDIO_QUALITY_bitRate = 96000;
+        AUDIO_QUALITY_bitRate = 96000,
+        TAP_TO_ZOOM_FACTOR = 2;
 
     public static final String
         TEXT_FONT_PATH = KSettings.INTERNAL_FONTS_PATHS[0],
@@ -88,5 +93,7 @@ public class DefaultSettings {
         IMAGE_PATH = null,
         BEFORE_START_URL = Constants.Url.App.REPOSITORY,
         BEFORE_START_LAUNCH_APP_PACKAGE = Constants.HOME_PACKAGE_NAME,
-        SHORTCUTS_BUTTON_ON_MENU = "[\"" + Constants.HOME_PACKAGE_NAME + "\"]";
+        SHORTCUTS_BUTTON_ON_MENU = "[\"" + Constants.HOME_PACKAGE_NAME + "\"]",
+        CUSTOM_WATERMARK_TEXT = "My Watermark",
+        CUSTOM_WATERMARK_IMAGE_PATH = null;
 }
