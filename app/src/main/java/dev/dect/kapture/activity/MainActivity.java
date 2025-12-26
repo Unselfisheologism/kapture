@@ -49,6 +49,8 @@ import dev.dect.kapture.model.Kapture;
 import dev.dect.kapture.notification.ReceivingNotification;
 import dev.dect.kapture.popup.DialogPopup;
 import dev.dect.kapture.popup.PermissionPopup;
+import dev.dect.kapture.utils.AdsManager;
+import dev.dect.kapture.utils.ProVersionManager;
 import dev.dect.kapture.utils.Utils;
 
 @SuppressLint({"ApplySharedPref", "UnsafeIntentLaunch"})
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     private Dialog POPUP;
 
     private int AMOUNT_SELECTED = 0;
+    
+    private FrameLayout adContainer;
+    private int exportCountSinceLastAd = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         initVariables();
 
         initListeners();
+        
+        // Initialize ads if this is the free version
+        if (ProVersionManager.shouldShowAds(this)) {
+            initAds();
+        }
 
         checkAndRequestPermissions();
     }
@@ -87,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         ACTIVITY = null;
+        
+        // Clean up ads
+        AdsManager.destroyAds();
 
         super.onDestroy();
     }
@@ -225,9 +238,38 @@ public class MainActivity extends AppCompatActivity {
             BTN_TAB_SETTINGS = findViewById(R.id.bottomBarBtnSettings);
 
             VIEW_PAGER = findViewById(R.id.viewPager);
+            
+            // Initialize ad container
+            adContainer = findViewById(R.id.adContainer);
         }
 
         KAPTURE_FRAGMENT = new KapturesFragment();
+    }
+    
+    private void initAds() {
+        // Initialize ads manager
+        AdsManager.initialize(this);
+        
+        // Load banner ad
+        if (adContainer != null) {
+            AdsManager.loadBannerAd(this, adContainer);
+        }
+        
+        // Load interstitial ad
+        AdsManager.loadInterstitialAd(this);
+    }
+    
+    public void onExportCompleted() {
+        exportCountSinceLastAd++;
+        
+        // Show interstitial ad every 3 exports in free version
+        if (ProVersionManager.shouldShowAds(this) && exportCountSinceLastAd >= 3) {
+            AdsManager.showInterstitialAd();
+            exportCountSinceLastAd = 0;
+            
+            // Reload interstitial ad for next time
+            AdsManager.loadInterstitialAd(this);
+        }
     }
 
     private void initListeners() {

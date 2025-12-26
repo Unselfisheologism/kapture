@@ -77,7 +77,8 @@ public class DefaultSettings {
         STOP_ON_BATTERY_LEVEL_LEVEL = 30,
         BEFORE_START_MEDIA_VOLUME_PERCENTAGE = 50,
         AUDIO_SAMPLE_RATE = 44100,
-        AUDIO_QUALITY_bitRate = 96000;
+        AUDIO_QUALITY_bitRate = 96000,
+        VIDEO_QUALITY_PRESET = KSettings.VIDEO_QUALITY_PRESET_CUSTOM;
 
     public static final String
         TEXT_FONT_PATH = KSettings.INTERNAL_FONTS_PATHS[0],

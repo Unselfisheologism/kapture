@@ -61,6 +61,8 @@ public class MenuOverlay {
 
     private final long[] TIME_HELPER = new long[1];
 
+    private dev.dect.kapture.recorder.ScreenMicRecorder SCREEN_RECORDER;
+
     private View VIEW;
 
     private WindowManager.LayoutParams LAYOUT_PARAMETERS;
@@ -247,6 +249,10 @@ public class MenuOverlay {
         MEDIA_RECORDER_SURFACE = s;
     }
 
+    public void setScreenRecorder(dev.dect.kapture.recorder.ScreenMicRecorder recorder) {
+        this.SCREEN_RECORDER = recorder;
+    }
+
     public void takeScreenshot() {
         if(MEDIA_RECORDER_SURFACE != null) {
             VIEW.setVisibility(View.GONE);
@@ -318,6 +324,15 @@ public class MenuOverlay {
 
                 case MotionEvent.ACTION_UP:
                     if(new Date().getTime() - TIME_HELPER[0] <= 200) {
+                        // Quick tap - check if it's a tap-to-zoom event
+                        if (SCREEN_RECORDER != null && SCREEN_RECORDER.isTapToZoomAvailable()) {
+                            // Convert screen coordinates to video coordinates
+                            int tapX = (int) e.getRawX();
+                            int tapY = (int) e.getRawY();
+                            
+                            // Pass tap event to screen recorder for zoom handling
+                            SCREEN_RECORDER.handleTapEvent(tapX, tapY);
+                        }
                         v.performClick();
                     } else {
                         EDITOR_PROFILE.putInt(Constants.Sp.Profile.OVERLAY_MENU_X_POS, LAYOUT_PARAMETERS.x);

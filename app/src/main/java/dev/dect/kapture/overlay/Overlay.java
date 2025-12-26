@@ -6,6 +6,7 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 import dev.dect.kapture.data.KSettings;
+import dev.dect.kapture.recorder.ScreenMicRecorder;
 
 @SuppressLint("InflateParams")
 public class Overlay {
@@ -16,6 +17,8 @@ public class Overlay {
     private final TextOverlay TEXT_OVERLAY;
 
     private final ImageOverlay IMAGE_OVERLAY;
+
+    private ScreenMicRecorder SCREEN_RECORDER;
 
     public Overlay(Context ctx, KSettings ks) {
         final WindowManager windowManager = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
@@ -49,6 +52,11 @@ public class Overlay {
 
     public void setMediaRecorderSurface(Surface s) {
         MENU_OVERLAY.setMediaRecorderSurface(s);
+    }
+
+    public void setScreenRecorder(ScreenMicRecorder recorder) {
+        this.SCREEN_RECORDER = recorder;
+        MENU_OVERLAY.setScreenRecorder(recorder);
     }
 
     public void refreshRecordingState() {

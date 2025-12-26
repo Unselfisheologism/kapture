@@ -387,6 +387,14 @@ public class SettingsFragment extends Fragment {
 
         final ArrayList<ListPicker> listPickers0 = new ArrayList<>();
 
+        // Add video quality preset selector
+        concatAdapter.addAdapter(new ListVideoQualityPreset(
+            CONTEXT,
+            R.string.setting_video_quality_preset,
+            R.string.setting_video_quality_preset_description,
+            R.drawable.icon_settings_video_quality_preset
+        ));
+
         listPickers0.add(new ListPicker.NumberInteger(R.string.setting_video_resolution, settings.getVideoResolution(), KSettings.VIDEO_RESOLUTIONS, KSettings.getVideoResolutionsFormatted(CONTEXT), Constants.Sp.Profile.VIDEO_RESOLUTION, false));
 
         listPickers0.add(new ListPicker.NumberInteger(R.string.setting_video_quality, settings.getVideoBitRate(), KSettings.VIDEO_QUALITIES, KSettings.getVideoQualitiesFormatted(), Constants.Sp.Profile.VIDEO_QUALITY_bitRate, false));

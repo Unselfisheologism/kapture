@@ -98,6 +98,7 @@ public class Constants {
                 MINIMIZING_SIDE = "k64",
                 MENU_STYLE = "k65",
                 OVERLAY_DRAW_X_POS = "k66",
+                VIDEO_QUALITY_PRESET = "k99",
                 OVERLAY_DRAW_Y_POS = "k67",
                 IS_TO_SHOW_UNDO_REDO_BUTTON_ON_DRAW_MENU = "k68",
                 IS_TO_SHOW_CLEAR_BUTTON_ON_DRAW_MENU = "k68",

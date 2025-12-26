@@ -38,6 +38,12 @@ public class KSettings {
                               MENU_STYLES = new int[]{0, 1}, //horizontal, vertical
                               VIDEO_ORIENTATIONS = new int[]{Configuration.ORIENTATION_UNDEFINED, Configuration.ORIENTATION_LANDSCAPE, Configuration.ORIENTATION_PORTRAIT};
 
+    // Video Quality Presets
+    public static final int VIDEO_QUALITY_PRESET_LOW = 0;
+    public static final int VIDEO_QUALITY_PRESET_MEDIUM = 1;
+    public static final int VIDEO_QUALITY_PRESET_HIGH = 2;
+    public static final int VIDEO_QUALITY_PRESET_CUSTOM = 3;
+
     public static final String[] INTERNAL_FONTS_PATHS = new String[]{"font/roboto.ttf", "font/roboto_mono.ttf", "font/bebas_neue.ttf", "font/oswald.ttf", "font/pacifico.ttf", "font/permanent_marker.ttf", "font/silkscreen.ttf", "font/monoton.ttf", "font/orbitron.ttf"};
 
     private final Context CONTEXT;
@@ -101,7 +107,8 @@ public class KSettings {
                       IMAGE_SIZE,
                       BEFORE_START_MEDIA_VOLUME_PERCENTAGE,
                       AUDIO_SAMPLE_RATE,
-                      AUDIO_QUALITY;
+                      AUDIO_QUALITY,
+                      VIDEO_QUALITY_PRESET;
 
     private final File SAVE_LOCATION,
                        SAVE_SCREENSHOT_LOCATION;
@@ -224,6 +231,9 @@ public class KSettings {
 
         this.AUDIO_SAMPLE_RATE = spProfile.getInt(Constants.Sp.Profile.AUDIO_SAMPLE_RATE, DefaultSettings.AUDIO_SAMPLE_RATE);
         this.AUDIO_QUALITY = spProfile.getInt(Constants.Sp.Profile.AUDIO_QUALITY_bitRate, DefaultSettings.AUDIO_QUALITY_bitRate);
+        
+        // Video quality preset (default to custom for backward compatibility)
+        this.VIDEO_QUALITY_PRESET = spProfile.getInt(Constants.Sp.Profile.VIDEO_QUALITY_PRESET, VIDEO_QUALITY_PRESET_CUSTOM);
 
         this.SAVE_LOCATION = KFile.getSavingLocation(ctx);
 
@@ -352,6 +362,19 @@ public class KSettings {
 
     public int getAudioBitRate() {
         return AUDIO_QUALITY;
+    }
+    
+    public int getVideoQualityPreset() {
+        return VIDEO_QUALITY_PRESET;
+    }
+    
+    public void applyVideoQualityPreset() {
+        int[] presetValues = getQualityPresetValues(VIDEO_QUALITY_PRESET);
+        if (presetValues != null) {
+            // Apply preset values
+            // Note: This would require modifying the settings system to allow dynamic changes
+            // For now, this is a placeholder for the logic
+        }
     }
 
     public File getSavingLocationFile() {
@@ -914,6 +937,39 @@ public class KSettings {
 
             default:
                 return -1;
+        }
+    }
+
+    // Video Quality Preset Methods
+    public static int[] getQualityPresetValues(int preset) {
+        switch(preset) {
+            case VIDEO_QUALITY_PRESET_LOW:
+                // Low: 720p 30fps, 4Mbps
+                return new int[]{720, 30, 4000000};
+            case VIDEO_QUALITY_PRESET_MEDIUM:
+                // Medium: 1080p 30fps, 8Mbps
+                return new int[]{1080, 30, 8000000};
+            case VIDEO_QUALITY_PRESET_HIGH:
+                // High: 1080p 60fps, 12Mbps
+                return new int[]{1080, 60, 12000000};
+            case VIDEO_QUALITY_PRESET_CUSTOM:
+            default:
+                // Custom: use current settings
+                return null;
+        }
+    }
+
+    public static String getQualityPresetName(int preset) {
+        switch(preset) {
+            case VIDEO_QUALITY_PRESET_LOW:
+                return "Low";
+            case VIDEO_QUALITY_PRESET_MEDIUM:
+                return "Medium";
+            case VIDEO_QUALITY_PRESET_HIGH:
+                return "High";
+            case VIDEO_QUALITY_PRESET_CUSTOM:
+            default:
+                return "Custom";
         }
     }
 }

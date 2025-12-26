@@ -14,6 +14,7 @@ import java.util.Date;
 import dev.dect.kapture.R;
 import dev.dect.kapture.data.Constants;
 import dev.dect.kapture.data.KSettings;
+import dev.dect.kapture.recorder.TapToZoomManager;
 import dev.dect.kapture.service.CapturingService;
 import dev.dect.kapture.utils.KMediaProjection;
 
@@ -31,11 +32,14 @@ public class ScreenMicRecorder {
 
     private File TEMP_FILE;
 
+    private TapToZoomManager TAP_TO_ZOOM_MANAGER;
+
     public ScreenMicRecorder(Context ctx, KSettings rs) {
         this.CONTEXT = ctx;
         this.KSETTINGS = rs;
 
         createTempFile();
+        this.TAP_TO_ZOOM_MANAGER = new TapToZoomManager(ctx, rs);
     }
 
     public void init() {
@@ -69,6 +73,9 @@ public class ScreenMicRecorder {
             MEDIA_RECORDER.setOutputFile(TEMP_FILE.getAbsolutePath());
 
             MEDIA_RECORDER.prepare();
+            
+            // Enable tap-to-zoom if available
+            TAP_TO_ZOOM_MANAGER.enable();
         } catch (Exception e) {
             Log.e(TAG, "init: " + e.getMessage());
 
@@ -112,6 +119,10 @@ public class ScreenMicRecorder {
         MEDIA_RECORDER = null;
 
         TEMP_FILE.delete();
+        
+        if (TAP_TO_ZOOM_MANAGER != null) {
+            TAP_TO_ZOOM_MANAGER.destroy();
+        }
     }
 
     public File getFile() {
@@ -128,5 +139,15 @@ public class ScreenMicRecorder {
 
     public Surface getSurface() {
         return MEDIA_RECORDER.getSurface();
+    }
+    
+    public void handleTapEvent(int x, int y) {
+        if (TAP_TO_ZOOM_MANAGER != null && TAP_TO_ZOOM_MANAGER.isEnabled()) {
+            TAP_TO_ZOOM_MANAGER.handleTapEvent(x, y);
+        }
+    }
+    
+    public boolean isTapToZoomAvailable() {
+        return TAP_TO_ZOOM_MANAGER != null && TAP_TO_ZOOM_MANAGER.isEnabled();
     }
 }
