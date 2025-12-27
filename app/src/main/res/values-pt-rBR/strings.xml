@@ -572,7 +572,7 @@
 
     <string name="title_how_to_connect">Como se conectar?</string>
 
-    <string name="how_to_connect_step_number">Passo %d0 de %d1</string>
+    <string name="how_to_connect_step_number" formatted="false">Passo %1$d de %2$d</string>
 
     <string name="how_to_connect_step_0">Conectar-se ao WiFi</string>
     <string name="how_to_connect_step_1">Ative as opções de desenvolvedor</string>
