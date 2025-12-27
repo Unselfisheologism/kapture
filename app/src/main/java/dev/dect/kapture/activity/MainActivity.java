@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
      * Initialize ads for free version.
      */
     private void initAds() {
-        if (AdManager.shouldShowAds(getApplicationContext())) {
+        if (AdManager.shouldShowAdsStatic(getApplicationContext())) {
             AD_MANAGER = AdManager.getInstance(this);
             AD_MANAGER.initializeBannerAd(AD_CONTAINER);
             AD_MANAGER.loadBannerAd();
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onProductDetailsLoaded(com.android.billingclient.api.SkuDetails skuDetails) {
+                public void onProductDetailsLoaded(com.android.billingclient.api.ProductDetails productDetails) {
                     // Product details loaded
                 }
             });

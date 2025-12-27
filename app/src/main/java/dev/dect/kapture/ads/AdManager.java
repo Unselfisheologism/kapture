@@ -44,6 +44,13 @@ public class AdManager {
     }
 
     /**
+     * Static check if ads should be shown (for use before instance creation).
+     */
+    public static boolean shouldShowAdsStatic(Context ctx) {
+        return ProVersionManager.shouldShowAds(ctx);
+    }
+
+    /**
      * Initialize banner ad container.
      * @param container The parent layout to add banner ads to
      */

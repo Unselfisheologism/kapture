@@ -235,7 +235,7 @@ public class KSettings {
         this.AUDIO_QUALITY = spProfile.getInt(Constants.Sp.Profile.AUDIO_QUALITY_bitRate, DefaultSettings.AUDIO_QUALITY_bitRate);
 
         this.IS_TO_USE_TAP_TO_ZOOM = spProfile.getBoolean(Constants.Sp.Profile.IS_TO_USE_TAP_TO_ZOOM, DefaultSettings.IS_TO_USE_TAP_TO_ZOOM);
-        this.TAP_TO_ZOOM_FACTOR = spProfile.getFloat(Constants.Sp.Profile.TAP_TO_ZOOM_FACTOR, DefaultSettings.TAP_TO_ZOOM_FACTOR);
+        this.TAP_TO_ZOOM_FACTOR = spProfile.getFloat(Constants.Sp.Profile.TAP_TO_ZOOM_FACTOR, (float) DefaultSettings.TAP_TO_ZOOM_FACTOR);
 
         this.IS_TO_USE_CUSTOM_WATERMARK = spProfile.getBoolean(Constants.Sp.Profile.IS_TO_USE_CUSTOM_WATERMARK, DefaultSettings.IS_TO_USE_CUSTOM_WATERMARK);
         this.CUSTOM_WATERMARK_TEXT = spProfile.getString(Constants.Sp.Profile.CUSTOM_WATERMARK_TEXT, DefaultSettings.CUSTOM_WATERMARK_TEXT);

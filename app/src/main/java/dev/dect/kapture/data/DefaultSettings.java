@@ -57,9 +57,7 @@ public class DefaultSettings {
         INSTALLER_IS_TO_WRAP_TEXT = true,
         IS_TO_MERGE_INTERNAL_AUDIO = true,
         IS_TO_USE_TAP_TO_ZOOM = false,
-        IS_TO_USE_CUSTOM_WATERMARK = false,
-        CUSTOM_WATERMARK_OPACITY = 80,
-        CUSTOM_WATERMARK_SIZE = 24;
+        IS_TO_USE_CUSTOM_WATERMARK = false;
 
     public static final int
         VIDEO_RESOLUTION = -1,
@@ -82,7 +80,9 @@ public class DefaultSettings {
         BEFORE_START_MEDIA_VOLUME_PERCENTAGE = 50,
         AUDIO_SAMPLE_RATE = 44100,
         AUDIO_QUALITY_bitRate = 96000,
-        TAP_TO_ZOOM_FACTOR = 2;
+        TAP_TO_ZOOM_FACTOR = 2,
+        CUSTOM_WATERMARK_OPACITY = 80,
+        CUSTOM_WATERMARK_SIZE = 24;
 
     public static final String
         TEXT_FONT_PATH = KSettings.INTERNAL_FONTS_PATHS[0],

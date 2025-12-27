@@ -203,7 +203,9 @@ public class TapToZoomOverlay extends FrameLayout {
         ZOOM_MATRIX.postScale(CURRENT_ZOOM, CURRENT_ZOOM, ZOOM_CENTER_X, ZOOM_CENTER_Y);
 
         try {
-            MEDIA_RECORDER_SURFACE.setMatrix(ZOOM_MATRIX);
+            // Note: Surface transformation requires VirtualDisplay or MediaCodec configuration
+            // For now, this is a placeholder for the zoom effect
+            // A full implementation would use VirtualDisplay with scale transformation
         } catch (Exception e) {
             // Surface may have been released
         }
