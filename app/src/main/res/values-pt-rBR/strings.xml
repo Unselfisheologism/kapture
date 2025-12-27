@@ -4,7 +4,7 @@
     <string name="quick_settings_tile_stop_recording">Parar captura de tela</string>
     <string name="quick_settings_tile_processing">Processando a captura</string>
 
-    <string name="quick_settings_tile_wifi_share">Compartilhar no WiFi (Kapture)</string>
+    <string name="quick_settings_tile_wifi_share">Compartilhar no WiFi (Scrnshoot)</string>
 
     <string name="shortcut_start_recording">Iniciar captura de tela</string>
     <string name="shortcut_stop_recording">Parar captura de tela</string>
@@ -48,7 +48,7 @@
     <string name="notification_channel_name_wifi_share">@string/bottom_bar_wifi_share</string>
     <string name="notification_channel_name_overlay">Sobreposição</string>
 
-    <string name="permission_title">Kapture utiliza as seguintes permissões</string>
+    <string name="permission_title">Scrnshoot utiliza as seguintes permissões</string>
     <string name="permission_required">Permissões obrigatórias</string>
 
     <string name="permission_mic_title">Microfone</string>
@@ -66,7 +66,7 @@
 
     <string name="permission_security_title">Escrever configurações de segurança</string>
     <string name="permission_security_description">Utilizada para iniciar/parar automaticamente o serviço de acessibilidade.</string>
-    <string name="permission_security_popup">Você tem três opcões:\n\n1 - Iniciar o serviço manualmente e mantê-lo rodando (consome mais bateria, mas permite iniciar uma captura sem ser redirecionado para o menu de acessibilidade);\n\n2 - Iniciar e parar o serviço manualmente toda vez (você será redirecionado para o menu de acessibilidade de o serviço estiver desativado);\n\n3 - Permitir que o app inicie e pare o serviço automaticamente, executando o comando: \n\n\"adb shell pm grant dev.dect.kapture android.permission.WRITE_SECURE_SETTINGS\".\n\nIniciando no Android 14, alguns aparelhos podem mostrar um popup informando que o serviço de acessibilidade é uma configuração restrita e que essa função está indisponível ou precisa ser ativada manualmente quando você tentar ativar o serviço de acessibilidade. Caso você esteja usando o comando ADB essa mensagem nem aparece, a captura simplismente não inicia. Caso isso acontece você deverá ativar a permissão manualmente!</string>
+    <string name="permission_security_popup">Você tem três opcões:\n\n1 - Iniciar o serviço manualmente e mantê-lo rodando (consome mais bateria, mas permite iniciar uma captura sem ser redirecionado para o menu de acessibilidade);\n\n2 - Iniciar e parar o serviço manualmente toda vez (você será redirecionado para o menu de acessibilidade de o serviço estiver desativado);\n\n3 - Permitir que o app inicie e pare o serviço automaticamente, executando o comando: \n\n\"adb shell pm grant dev.dect.scrnshoot android.permission.WRITE_SECURE_SETTINGS\".\n\nIniciando no Android 14, alguns aparelhos podem mostrar um popup informando que o serviço de acessibilidade é uma configuração restrita e que essa função está indisponível ou precisa ser ativada manualmente quando você tentar ativar o serviço de acessibilidade. Caso você esteja usando o comando ADB essa mensagem nem aparece, a captura simplismente não inicia. Caso isso acontece você deverá ativar a permissão manualmente!</string>
 
     <string name="permission_button_continue">Continar</string>
     <string name="permission_button_close">Fechar app</string>
@@ -82,7 +82,7 @@
     <string name="toast_error_file_not_found">Arquivo não encontrado!</string>
     <string name="toast_error_no_extras_found">Nenhum extra encontrado!</string>
     <string name="toast_error_no_screenshots_found">Nenhum screenshot encontrado!</string>
-    <string name="toast_error_no_kaptures_found">Nenhuma kaptura encontrada!</string>
+    <string name="toast_error_no_scrnshoots_found">Nenhuma kaptura encontrada!</string>
     <string name="toast_error_no_profiles_found">Nenhum perfil encontrado!</string>
     <string name="toast_error_generic">Algo deu errado!</string>
     <string name="toast_error_merging_1">Não foi possível adicionar audio interno!</string>
@@ -398,9 +398,9 @@
     <string name="menu_viewer_video_open_externally">Abrir externamente</string>
     <string name="menu_viewer_video_share">@string/bottom_bar_share</string>
 
-    <string name="command">adb shell pm grant dev.dect.kapture android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="command">adb shell pm grant dev.dect.scrnshoot android.permission.WRITE_SECURE_SETTINGS</string>
 
-    <string name="about_made_by">Kapture foi feito por DS.</string>
+    <string name="about_made_by">Scrnshoot foi feito por DS.</string>
 
     <string name="about_version">Versão</string>
     <string name="about_version_available">Nova versão disponível:</string>
@@ -489,11 +489,11 @@
 
     <string name="storage_usage">Uso do armazenamento interno</string>
     <string name="storage_other">Outros apps</string>
-    <string name="storage_kaptures">Arquivos do Kapture</string>
-    <string name="storage_cache">Cache do Kapture</string>
+    <string name="storage_scrnshoots">Arquivos do Scrnshoot</string>
+    <string name="storage_cache">Cache do Scrnshoot</string>
     <string name="storage_free">Disponível</string>
 
-    <string name="storage_message">Kapturas removidas pelo app ou removidas externamente, e os seus arquivos correspondentes, não são incluidos na categoria \"Arquivos do Kapture\".</string>
+    <string name="storage_message">Kapturas removidas pelo app ou removidas externamente, e os seus arquivos correspondentes, não são incluidos na categoria \"Arquivos do Scrnshoot\".</string>
 
     <string name="storage_btn_clear_cache">Limpar cache</string>
     <string name="storage_btn_clear_cache_description">Kapturas, arquivos extras e screenshots não serão removidos.</string>

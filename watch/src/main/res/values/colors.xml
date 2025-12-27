@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main">#EB3B2E</color>
-    <color name="main_darker">#7A1F18</color>
+    <color name="main">#FF8C00</color>
+    <color name="main_darker">#CC7000</color>
 
     <color name="background_transparent">#C9000000</color>
 
-    <color name="activity_background">#000000</color>
+    <color name="activity_background">#1A1A1A</color>
 
     <color name="c0">#EDEDED</color>
     <color name="c1">#979797</color>
@@ -86,11 +86,11 @@
 
     <color name="credits_text">@color/c5</color>
 
-    <color name="kapture_title">@color/c0</color>
-    <color name="kapture_sub_title">@color/c1</color>
-    <color name="kapture_image_helper">@color/c3</color>
-    <color name="kapture_image_error_helper">@color/main_darker</color>
-    <color name="kapture_image_error_icon_helper">@color/c0</color>
+    <color name="scrnshoot_title">@color/c0</color>
+    <color name="scrnshoot_sub_title">@color/c1</color>
+    <color name="scrnshoot_image_helper">@color/c3</color>
+    <color name="scrnshoot_image_error_helper">@color/main_darker</color>
+    <color name="scrnshoot_image_error_icon_helper">@color/c0</color>
 
     <color name="select_text">@color/c0</color>
     <color name="select_background">#2D2D2D</color>
@@ -99,7 +99,7 @@
     <color name="popup_time_picker_font_not_focused">@color/popup_text</color>
 
     <color name="storage_other">@color/main_darker</color>
-    <color name="storage_kaptures">@color/main</color>
+    <color name="storage_scrnshoots">@color/main</color>
     <color name="storage_cache">@color/c1</color>
     <color name="storage_free">@color/c2</color>
 </resources>

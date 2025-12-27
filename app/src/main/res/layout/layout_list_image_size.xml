@@ -38,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="80dp"
                 android:layout_margin="15dp"
-                android:src="@drawable/icon_kapture_image_helper"
+                android:src="@drawable/icon_scrnshoot_image_helper"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

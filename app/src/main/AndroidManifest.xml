@@ -208,7 +208,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="dev.dect.kapture"
+            android:authorities="dev.dect.scrnshoot"
             android:exported="false"
             android:grantUriPermissions="true" >
 
@@ -288,7 +288,7 @@
 
                 <data
                     android:host="*"
-                    android:pathPrefix="/kapture"
+                    android:pathPrefix="/scrnshoot"
                     android:scheme="wear" />
             </intent-filter>
         </service>

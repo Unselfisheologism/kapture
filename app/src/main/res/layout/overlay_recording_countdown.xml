@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <dev.dect.kapture.view.OutlineTextView
+    <dev.dect.scrnshoot.view.OutlineTextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -92,7 +92,7 @@
                 android:contentDescription="@string/tooltip_draw"
                 android:longClickable="true"/>
 
-            <dev.dect.kapture.view.KChronometer
+            <dev.dect.scrnshoot.view.KChronometer
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

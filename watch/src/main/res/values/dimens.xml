@@ -112,16 +112,16 @@
 
     <dimen name="credits_text">@dimen/default_font</dimen>
 
-    <dimen name="kapture_list_height">75dp</dimen>
-    <dimen name="kapture_list_padding_sides">@dimen/group_padding_sides</dimen>
-    <dimen name="kapture_list_padding_top_bottom">8dp</dimen>
-    <dimen name="kapture_list_thumbnail_width_percentage">0.22</dimen>
-    <dimen name="kapture_list_space_from_thumbail">5dp</dimen>
-    <dimen name="kapture_list_space_info">5dp</dimen>
+    <dimen name="scrnshoot_list_height">75dp</dimen>
+    <dimen name="scrnshoot_list_padding_sides">@dimen/group_padding_sides</dimen>
+    <dimen name="scrnshoot_list_padding_top_bottom">8dp</dimen>
+    <dimen name="scrnshoot_list_thumbnail_width_percentage">0.22</dimen>
+    <dimen name="scrnshoot_list_space_from_thumbail">5dp</dimen>
+    <dimen name="scrnshoot_list_space_info">5dp</dimen>
 
-    <dimen name="kapture_list_title">@dimen/default_font</dimen>
-    <dimen name="kapture_list_sub_title">@dimen/default_font_secondary_list</dimen>
-    <dimen name="kapture_list_select_icon">@dimen/radio_checkbox_size</dimen>
+    <dimen name="scrnshoot_list_title">@dimen/default_font</dimen>
+    <dimen name="scrnshoot_list_sub_title">@dimen/default_font_secondary_list</dimen>
+    <dimen name="scrnshoot_list_select_icon">@dimen/radio_checkbox_size</dimen>
 
     <dimen name="select_text">@dimen/default_font_tertiary</dimen>
 

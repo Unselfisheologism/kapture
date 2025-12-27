@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Kapture</string>
+    <string name="app_name" translatable="false">Scrnshoot</string>
 
-    <string name="kapture" translatable="false">Kapture</string>
-    <string name="kapture_plural" translatable="false">Kaptures</string>
+    <string name="scrnshoot" translatable="false">Scrnshoot</string>
+    <string name="scrnshoot_plural" translatable="false">Scrnshoots</string>
 
-    <string name="folder_name" translatable="false">Kapture</string>
+    <string name="folder_name" translatable="false">Scrnshoot</string>
 
     <!-- ALL BELLOW CAN BE TRANSLATED -->
 
@@ -16,7 +16,7 @@
 
     <string name="toast_error_viewer_external">No external viewer found!</string>
     <string name="toast_error_file_not_found">File not found!</string>
-    <string name="toast_error_no_kaptures_found">No kaptures found!</string>
+    <string name="toast_error_no_scrnshoots_found">No scrnshoots found!</string>
     <string name="toast_error_generic">Something went wrong!</string>
     <string name="toast_error_launch_app">Could not launch app!</string>
     <string name="toast_error_check_update">Could not check for new versions!</string>
@@ -40,13 +40,13 @@
 
     <string name="popup_delete_text_2">Do you want to delete the selected file(s)?</string>
 
-    <string name="title_captures">Kaptures</string>
+    <string name="title_captures">Scrnshoots</string>
     <string name="title_settings">Settings</string>
     <string name="title_credits">Credits</string>
 
     <string name="setting_group_folder">Folder</string>
 
-    <string name="setting_folder_location">Kaptures location</string>
+    <string name="setting_folder_location">Scrnshoots location</string>
 
     <string name="setting_group_video">Video</string>
 
@@ -167,14 +167,14 @@
 
     <string name="storage_usage">Storage usage</string>
     <string name="storage_other">Other apps</string>
-    <string name="storage_kaptures">Kapture files</string>
-    <string name="storage_cache">Kapture cache</string>
+    <string name="storage_scrnshoots">Scrnshoot files</string>
+    <string name="storage_cache">Scrnshoot cache</string>
     <string name="storage_free">Free</string>
 
-    <string name="storage_message">Kaptures removed from the app or removed externally, and their corresponding files, are not included in the \"Kapture files\" category.</string>
+    <string name="storage_message">Scrnshoots removed from the app or removed externally, and their corresponding files, are not included in the \"Scrnshoot files\" category.</string>
 
     <string name="storage_btn_clear_cache">Clear cache</string>
-    <string name="storage_btn_clear_cache_description">Kaptures will not be removed.</string>
+    <string name="storage_btn_clear_cache_description">Scrnshoots will not be removed.</string>
 
     <string name="tooltip_select_all">@string/menu_capture_select_all</string>
     <string name="tooltip_hour">Hour</string>

@@ -7,7 +7,7 @@
 
     <string name="toast_error_viewer_external">Nenhum visualizador externo encontrado!</string>
     <string name="toast_error_file_not_found">Arquivo não encontrado!</string>
-    <string name="toast_error_no_kaptures_found">Nenhuma kaptura encontrada!</string>
+    <string name="toast_error_no_scrnshoots_found">Nenhuma kaptura encontrada!</string>
     <string name="toast_error_generic">Algo deu errado!</string>
     <string name="toast_error_launch_app">Não foi possível abrir o app!</string>
     <string name="toast_error_check_update">Não foi possível procurar por novas versões. Tente manualmente!</string>
@@ -158,11 +158,11 @@
 
     <string name="storage_usage">Uso do armazenamento</string>
     <string name="storage_other">Outros apps</string>
-    <string name="storage_kaptures">Arquivos do Kapture</string>
-    <string name="storage_cache">Cache do Kapture</string>
+    <string name="storage_scrnshoots">Arquivos do Scrnshoot</string>
+    <string name="storage_cache">Cache do Scrnshoot</string>
     <string name="storage_free">Disponível</string>
 
-    <string name="storage_message">Kapturas removidas pelo app ou removidas externamente, e os seus arquivos correspondentes, não são incluidos na categoria \"Arquivos do Kapture\".</string>
+    <string name="storage_message">Kapturas removidas pelo app ou removidas externamente, e os seus arquivos correspondentes, não são incluidos na categoria \"Arquivos do Scrnshoot\".</string>
 
     <string name="storage_btn_clear_cache">Limpar cache</string>
     <string name="storage_btn_clear_cache_description">Kapturas, arquivos extras e screenshots não serão removidos.</string>
