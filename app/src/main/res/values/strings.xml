@@ -720,4 +720,57 @@
     <string name="popup_btn_create">Create</string>
 
     <string name="tooltip_create_folder">@string/popup_title_create_folder</string>
+
+    <!-- Pro Features -->
+    <string name="setting_group_pro">Pro Features</string>
+    <string name="setting_pro_upgrade">Upgrade to Pro</string>
+    <string name="setting_pro_upgrade_description">Unlock all pro features with a one-time purchase</string>
+    <string name="setting_pro_already">You are a Pro user!</string>
+
+    <string name="setting_tap_to_zoom">Tap-to-Zoom</string>
+    <string name="setting_tap_to_zoom_description">Tap on screen during recording to zoom in. Double-tap to reset.</string>
+    <string name="setting_tap_to_zoom_factor">Zoom Factor</string>
+    <string name="setting_tap_to_zoom_factor_description">How much to zoom when tapping (1.5x - 3x)</string>
+
+    <string name="setting_watermark">Watermark</string>
+    <string name="setting_watermark_default">Default Watermark</string>
+    <string name="setting_watermark_default_description">Add \"Recorded with Kapture\" to your videos</string>
+    <string name="setting_watermark_custom">Custom Watermark</string>
+    <string name="setting_watermark_custom_description">Add your own text or logo watermark</string>
+    <string name="setting_watermark_text">Watermark Text</string>
+    <string name="setting_watermark_text_hint">Enter your watermark text</string>
+    <string name="setting_watermark_image">Watermark Image</string>
+    <string name="setting_watermark_image_description">Select an image for your watermark</string>
+    <string name="setting_watermark_position">Watermark Position</string>
+    <string name="setting_watermark_position_top_left">Top Left</string>
+    <string name="setting_watermark_position_top_center">Top Center</string>
+    <string name="setting_watermark_position_top_right">Top Right</string>
+    <string name="setting_watermark_position_center">Center</string>
+    <string name="setting_watermark_position_bottom_left">Bottom Left</string>
+    <string name="setting_watermark_position_bottom_center">Bottom Center</string>
+    <string name="setting_watermark_position_bottom_right">Bottom Right</string>
+    <string name="setting_watermark_opacity">Watermark Opacity</string>
+    <string name="setting_watermark_opacity_description">Transparency of the watermark (0-100%)</string>
+    <string name="setting_watermark_size">Watermark Size</string>
+    <string name="setting_watermark_size_description">Size of the watermark text</string>
+
+    <string name="pro_feature_tap_to_zoom">Tap-to-Zoom (Pro)</string>
+    <string name="pro_feature_custom_watermark">Custom Watermark (Pro)</string>
+    <string name="pro_feature_no_ads">No Ads (Pro)</string>
+    <string name="pro_feature_no_watermark">No Watermark (Pro)</string>
+
+    <string name="dialog_pro_title">Upgrade to Pro</string>
+    <string name="dialog_pro_message">Unlock premium features:\n\n✓ No ads\n✓ No default watermark\n✓ Custom watermark support\n✓ Tap-to-Zoom recording\n\nOne-time purchase: $5.99</string>
+    <string name="dialog_pro_btn_upgrade">Upgrade Now</string>
+    <string name="dialog_pro_btn_restore">Restore Purchase</string>
+    <string name="dialog_pro_btn_cancel">Maybe Later</string>
+
+    <string name="toast_pro_purchase_success">Thank you for upgrading to Pro!</string>
+    <string name="toast_pro_purchase_failed">Purchase failed. Please try again.</string>
+    <string name="toast_pro_restore_success">Pro features restored!</string>
+    <string name="toast_pro_restore_failed">No purchase found to restore.</string>
+
+    <!-- Ad related -->
+    <string name="ad_banner">Advertisement</string>
+    <string name="ad_loading">Loading ad…</string>
 </resources>

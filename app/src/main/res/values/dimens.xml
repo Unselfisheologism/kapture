@@ -351,4 +351,7 @@
     <dimen name="storage_icon_size">35dp</dimen>
     <dimen name="storage_text">@dimen/default_font_list_title</dimen>
     <dimen name="storage_text_margin_left">15dp</dimen>
+
+    <!-- Ad dimensions -->
+    <dimen name="ad_banner_height">50dp</dimen>
 </resources>

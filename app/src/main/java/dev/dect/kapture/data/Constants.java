@@ -126,7 +126,15 @@ public class Constants {
                 IS_TO_OPEN_SHORTCUTS_ON_POPUP = "k94",
                 AUDIO_SAMPLE_RATE = "k95",
                 AUDIO_QUALITY_bitRate = "k96",
-                IS_TO_MERGE_INTERNAL_AUDIO = "k97";
+                IS_TO_MERGE_INTERNAL_AUDIO = "k97",
+                IS_TO_USE_TAP_TO_ZOOM = "k98",
+                TAP_TO_ZOOM_FACTOR = "k99",
+                CUSTOM_WATERMARK_TEXT = "k100",
+                CUSTOM_WATERMARK_IMAGE_PATH = "k101",
+                CUSTOM_WATERMARK_POSITION = "k102",
+                CUSTOM_WATERMARK_OPACITY = "k103",
+                CUSTOM_WATERMARK_SIZE = "k104",
+                IS_TO_USE_CUSTOM_WATERMARK = "k105";
         }
     }
 

@@ -26,6 +26,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import androidx.activity.OnBackPressedCallback;
@@ -40,9 +41,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.Arrays;
 
 import dev.dect.kapture.adapter.FragmentAdapter;
+import dev.dect.kapture.ads.AdManager;
+import dev.dect.kapture.ads.BillingManager;
 import dev.dect.kapture.data.Constants;
 import dev.dect.kapture.R;
 import dev.dect.kapture.data.KSharedPreferences;
+import dev.dect.kapture.data.ProVersionManager;
 import dev.dect.kapture.fragment.KapturesFragment;
 import dev.dect.kapture.fragment.SettingsFragment;
 import dev.dect.kapture.model.Kapture;
@@ -71,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
     private int AMOUNT_SELECTED = 0;
 
+    // Pro features and ads
+    private AdManager AD_MANAGER;
+    private BillingManager BILLING_MANAGER;
+    private LinearLayout AD_CONTAINER;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,11 +91,103 @@ public class MainActivity extends AppCompatActivity {
         initListeners();
 
         checkAndRequestPermissions();
+
+        // Initialize ad manager for free version
+        initAds();
+    }
+
+    /**
+     * Initialize ads for free version.
+     */
+    private void initAds() {
+        if (AdManager.shouldShowAdsStatic(getApplicationContext())) {
+            AD_MANAGER = AdManager.getInstance(this);
+            AD_MANAGER.initializeBannerAd(AD_CONTAINER);
+            AD_MANAGER.loadBannerAd();
+            AD_MANAGER.preloadInterstitialAd();
+        }
+    }
+
+    /**
+     * Initialize billing manager for Pro purchase.
+     */
+    private void initBillingManager() {
+        if (!ProVersionManager.isProVersion(this)) {
+            BILLING_MANAGER = BillingManager.getInstance(this);
+            
+            // Only initialize billing if it's available (free version)
+            if (BILLING_MANAGER.isBillingAvailable()) {
+                BILLING_MANAGER.setListener(new BillingManager.BillingClientListener() {
+                    @Override
+                    public void onBillingClientReady() {
+                        BILLING_MANAGER.queryProductDetails();
+                    }
+
+                    @Override
+                    public void onBillingClientError(String message) {
+                        // Handle error silently
+                    }
+
+                    @Override
+                    public void onPurchaseVerified(boolean success) {
+                        if (success) {
+                            ProVersionManager.invalidateCache();
+                            recreate();
+                        }
+                    }
+
+                    @Override
+                    public void onProductDetailsLoaded(Object productDetails) {
+                        // Product details loaded
+                    }
+                });
+                BILLING_MANAGER.startConnection();
+            }
+        }
+    }
+
+    /**
+     * Show Pro upgrade dialog.
+     */
+    public void showProUpgradeDialog() {
+        new DialogPopup(
+            this,
+            R.string.dialog_pro_title,
+            R.string.dialog_pro_message,
+            R.string.dialog_pro_btn_upgrade,
+            () -> {
+                if (BILLING_MANAGER != null && BILLING_MANAGER.isReady()) {
+                    BILLING_MANAGER.launchPurchaseFlow(this);
+                } else {
+                    // Fallback: open Play Store
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                    } catch (Exception e) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
+                    }
+                }
+            },
+            R.string.dialog_pro_btn_cancel,
+            null,
+            true,
+            true,
+            false
+        ).show();
     }
 
     @Override
     protected void onDestroy() {
         ACTIVITY = null;
+
+        // Clean up ad resources
+        if (AD_MANAGER != null) {
+            AD_MANAGER.destroy();
+        }
+
+        // Clean up billing manager
+        if (BILLING_MANAGER != null) {
+            BILLING_MANAGER.destroy();
+        }
 
         super.onDestroy();
     }
@@ -369,6 +470,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final boolean isToLaunchNotificationSettings = getIntent().getCategories().contains("android.intent.category.NOTIFICATION_PREFERENCES");
+
+        // Initialize ad container for free version
+        if (!IS_TABLET_UI) {
+            AD_CONTAINER = findViewById(R.id.adContainer);
+            if (ProVersionManager.shouldShowAds(this)) {
+                AD_CONTAINER.setVisibility(View.VISIBLE);
+            } else {
+                AD_CONTAINER.setVisibility(View.GONE);
+            }
+        }
+
+        // Initialize billing manager for free version
+        if (ProVersionManager.shouldShowAds(this)) {
+            initBillingManager();
+        }
 
         if(IS_TABLET_UI) {
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
