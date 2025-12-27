@@ -17,6 +17,8 @@ public class Overlay {
 
     private final ImageOverlay IMAGE_OVERLAY;
 
+    private final TapToZoomOverlay TAP_TO_ZOOM_OVERLAY;
+
     public Overlay(Context ctx, KSettings ks) {
         final WindowManager windowManager = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
 
@@ -25,6 +27,7 @@ public class Overlay {
         this.MENU_OVERLAY = new MenuOverlay(ctx, ks, windowManager, CAMERA_OVERLAY);
         this.TEXT_OVERLAY = new TextOverlay(ctx, ks, windowManager);
         this.IMAGE_OVERLAY = new ImageOverlay(ctx, ks, windowManager);
+        this.TAP_TO_ZOOM_OVERLAY = new TapToZoomOverlay(ctx, ks, windowManager);
     }
 
     public void render() {
@@ -35,6 +38,8 @@ public class Overlay {
         TEXT_OVERLAY.render();
 
         IMAGE_OVERLAY.render();
+
+        TAP_TO_ZOOM_OVERLAY.render();
     }
 
     public void destroy() {
@@ -45,10 +50,13 @@ public class Overlay {
         TEXT_OVERLAY.destroy();
 
         IMAGE_OVERLAY.destroy();
+
+        TAP_TO_ZOOM_OVERLAY.destroy();
     }
 
     public void setMediaRecorderSurface(Surface s) {
         MENU_OVERLAY.setMediaRecorderSurface(s);
+        TAP_TO_ZOOM_OVERLAY.setMediaRecorderSurface(s);
     }
 
     public void refreshRecordingState() {

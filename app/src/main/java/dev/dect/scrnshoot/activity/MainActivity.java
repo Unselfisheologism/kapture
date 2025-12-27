@@ -91,9 +91,6 @@ public class MainActivity extends AppCompatActivity {
         initListeners();
 
         checkAndRequestPermissions();
-
-        // Initialize ad manager for free version
-        initAds();
     }
 
     /**
@@ -483,8 +480,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize billing manager for free version
         if (ProVersionManager.shouldShowAds(this)) {
-            initBillingManager();
+           initBillingManager();
         }
+
+        // Initialize ads for free version
+        initAds();
 
         if(IS_TABLET_UI) {
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

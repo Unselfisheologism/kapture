@@ -93,6 +93,22 @@ public class TapToZoomOverlay extends FrameLayout {
         this.ZOOM_ANIMATIONRunnable = this::animateZoom;
     }
 
+    public void render() {
+        if (!KSETTINGS.isToUseTapToZoom()) {
+            return;
+        }
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        layoutParams.format = android.graphics.PixelFormat.TRANSLUCENT;
+
+        WINDOW_MANAGER.addView(this, layoutParams);
+        setEnabled(true);
+    }
+
     private int[] getScreenSize() {
         int[] size = new int[2];
         WINDOW_MANAGER.getDefaultDisplay().getRealSize(new android.graphics.Point());
