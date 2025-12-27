@@ -23,6 +23,9 @@ public class BillingManager {
     // Price for Pro version
     public static final String PRO_PRICE = "$5.99";
 
+    // Request code for purchase flow activity result
+    public static final int REQUEST_CODE_PURCHASE = 1001;
+
     private final Context CONTEXT;
     private boolean IS_READY = false;
 

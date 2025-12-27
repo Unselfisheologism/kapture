@@ -169,6 +169,28 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.PricingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Translucent"
+            android:configChanges="orientation|screenSize|keyboardHidden|colorMode|screenLayout|navigation|fontScale|locale">
+
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.editor.VideoEditorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FullScreen"
+            android:configChanges="orientation|screenSize|keyboardHidden|colorMode|screenLayout|navigation|fontScale|locale">
+
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".service.CapturingService"
             android:exported="false"

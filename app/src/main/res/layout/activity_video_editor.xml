@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background">
+
+    <!-- Top bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/activity_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_tool_bar_back"
+            android:contentDescription="@string/popup_btn_close"
+            android:tint="@color/app_bar_font_title"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/editor_title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/app_bar_font_title"
+            android:layout_marginStart="8dp"/>
+
+        <AppCompatButton
+            android:id="@+id/btnExport"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/editor_btn_export"
+            android:textAllCaps="false"
+            android:textColor="@color/button_text_on_main"
+            android:background="@drawable/btn_main_color"
+            android:paddingHorizontal="16dp"/>
+
+    </LinearLayout>
+
+    <!-- Video container -->
+    <FrameLayout
+        android:id="@+id/videoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toTopOf="@id/timelineContainer"
+        app:layout_constraintHeight_percent="0.4">
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+
+        <!-- Overlay container for preview -->
+        <FrameLayout
+            android:id="@+id/overlayContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+    <!-- Timeline -->
+    <LinearLayout
+        android:id="@+id/timelineContainer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/bottom_bar_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/controlsContainer">
+
+        <TextView
+            android:id="@+id/textCurrentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="12sp"
+            android:textColor="@color/bottom_bar_icon_text"/>
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:progressTint="@color/main_color"
+            android:thumbTint="@color/main_color"/>
+
+        <TextView
+            android:id="@+id/textTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="12sp"
+            android:textColor="@color/bottom_bar_icon_text"/>
+
+    </LinearLayout>
+
+    <!-- Controls -->
+    <LinearLayout
+        android:id="@+id/controlsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/bottom_bar_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/overlaysDivider">
+
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_play"
+            android:contentDescription="@string/floating_btn_pause"
+            android:tint="@color/bottom_bar_icon_text"/>
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="1dp"/>
+
+        <AppCompatButton
+            android:id="@+id/btnAddOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/editor_btn_add_overlay"
+            android:textAllCaps="false"
+            android:textColor="@color/main_color"
+            android:background="@drawable/btn_outline_main_color"
+            android:paddingHorizontal="16dp"/>
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:id="@+id/overlaysDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        app:layout_constraintBottom_toTopOf="@id/overlaysLabel"/>
+
+    <!-- Overlays label -->
+    <TextView
+        android:id="@+id/overlaysLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/editor_btn_add_overlay"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/app_bar_font_title"
+        android:padding="16dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/overlaysList"/>
+
+    <!-- Overlays list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/overlaysList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/overlaysDivider"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
