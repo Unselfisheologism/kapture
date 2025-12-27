@@ -8,8 +8,8 @@
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="dev.dect.kapture"
-            android:targetClass="dev.dect.kapture.activity.ActionActivity">
+            android:targetPackage="dev.dect.scrnshoot"
+            android:targetClass="dev.dect.scrnshoot.activity.ActionActivity">
 
             <extra android:name="from" android:value="4"/>
             <extra android:name="action" android:value="ACTION.START"/>
@@ -25,8 +25,8 @@
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="dev.dect.kapture"
-            android:targetClass="dev.dect.kapture.activity.ActionActivity">
+            android:targetPackage="dev.dect.scrnshoot"
+            android:targetClass="dev.dect.scrnshoot.activity.ActionActivity">
 
             <extra android:name="from" android:value="4"/>
             <extra android:name="action" android:value="ACTION.STOP"/>
@@ -42,8 +42,8 @@
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="dev.dect.kapture"
-            android:targetClass="dev.dect.kapture.activity.ActionActivity">
+            android:targetPackage="dev.dect.scrnshoot"
+            android:targetClass="dev.dect.scrnshoot.activity.ActionActivity">
 
             <extra android:name="from" android:value="4"/>
             <extra android:name="action" android:value="ACTION.PAUSE"/>
@@ -59,8 +59,8 @@
 
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="dev.dect.kapture"
-            android:targetClass="dev.dect.kapture.activity.ActionActivity">
+            android:targetPackage="dev.dect.scrnshoot"
+            android:targetClass="dev.dect.scrnshoot.activity.ActionActivity">
 
             <extra android:name="from" android:value="4"/>
             <extra android:name="action" android:value="ACTION.RESUME"/>

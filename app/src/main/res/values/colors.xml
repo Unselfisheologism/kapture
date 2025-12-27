@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main">#EB3B2E</color>
-    <color name="main_darker">#7A1F18</color>
-    <color name="main_transparent">#CBEB3B2E</color>
+    <color name="main">#FF8C00</color>
+    <color name="main_darker">#CC7000</color>
+    <color name="main_transparent">#CBFF8C00</color>
 
     <color name="background_transparent">#B5000000</color>
 
     <color name="activity_background">#F6F6F6</color>
     <color name="activity_background_transparent">@color/background_transparent</color>
 
-    <color name="c0">#020202</color>
+    <color name="c0">#2C2C2C</color>
     <color name="c1">#8E8E8E</color>
     <color name="c2">#808080</color>
     <color name="c3">#E8E8E8</color>
@@ -121,7 +121,7 @@
     <color name="popup_btn">@color/popup_container_background</color>
     <color name="popup_btn_text">@color/c0</color>
     <color name="popup_btn_text_disabled">@color/c2</color>
-    <color name="popup_btn_text_dangerous">#DB332A</color>
+    <color name="popup_btn_text_dangerous">#FF6D00</color>
     <color name="popup_btn_divisor">@color/c4</color>
     <color name="popup_title">@color/c0</color>
     <color name="popup_text">#646464</color>
@@ -144,14 +144,14 @@
 
     <color name="credits_text">@color/c0</color>
 
-    <color name="kapture_title">@color/c0</color>
-    <color name="kapture_sub_title">@color/c1</color>
-    <color name="kapture_image_helper">@color/c3</color>
-    <color name="kapture_image_error_helper">@color/main</color>
-    <color name="kapture_image_error_icon_helper">@color/c3</color>
-    <color name="kapture_btn">@color/c3</color>
-    <color name="kapture_grid_time">@color/c3</color>
-    <color name="kapture_grid_el_background">#883B3B40</color>
+    <color name="scrnshoot_title">@color/c0</color>
+    <color name="scrnshoot_sub_title">@color/c1</color>
+    <color name="scrnshoot_image_helper">@color/c3</color>
+    <color name="scrnshoot_image_error_helper">@color/main</color>
+    <color name="scrnshoot_image_error_icon_helper">@color/c3</color>
+    <color name="scrnshoot_btn">@color/c3</color>
+    <color name="scrnshoot_grid_time">@color/c3</color>
+    <color name="scrnshoot_grid_el_background">#883B3B40</color>
 
     <color name="audio_option_button_close">@color/c5</color>
     <color name="audio_option_title">@color/c0</color>
@@ -182,7 +182,7 @@
     <color name="frame_layout_tablet_border">@color/c0</color>
 
     <color name="storage_other">@color/main_darker</color>
-    <color name="storage_kaptures">@color/main</color>
+    <color name="storage_scrnshoots">@color/main</color>
     <color name="storage_cache">@color/c3</color>
     <color name="storage_free">@color/c6</color>
 
@@ -240,7 +240,7 @@
     <color name="pill_icon_active">@color/main</color>
     <color name="pill_text_active">@color/main</color>
 
-    <color name="image_preview_helper">@color/kapture_image_helper</color>
+    <color name="image_preview_helper">@color/scrnshoot_image_helper</color>
 
     <!-- Ad colors -->
     <color name="ad_banner_placeholder">#E0E0E0</color>

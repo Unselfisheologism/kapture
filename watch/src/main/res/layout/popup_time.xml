@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/popupBtnContainer">
 
-            <dev.dect.kapture.view.KTimePicker
+            <dev.dect.scrnshoot.view.KTimePicker
                 android:id="@+id/hour"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -65,7 +65,7 @@
                 android:gravity="center"
                 android:layout_weight="0.5"/>
 
-            <dev.dect.kapture.view.KTimePicker
+            <dev.dect.scrnshoot.view.KTimePicker
                 android:id="@+id/minute"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -83,7 +83,7 @@
                 android:layout_weight="0.5"
                 android:textSize="@dimen/popup_time_picker_font"/>
 
-            <dev.dect.kapture.view.KTimePicker
+            <dev.dect.scrnshoot.view.KTimePicker
                 android:id="@+id/second"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

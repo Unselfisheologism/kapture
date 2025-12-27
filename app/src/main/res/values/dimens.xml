@@ -168,25 +168,25 @@
     <dimen name="credits_padding">12dp</dimen>
     <dimen name="credits_text">@dimen/default_font</dimen>
 
-    <dimen name="kapture_list_height">135dp</dimen>
-    <dimen name="kapture_list_padding_sides">12dp</dimen>
-    <dimen name="kapture_list_padding_top_bottom">12dp</dimen>
-    <dimen name="kapture_list_thumbnail_width_percentage">0.25</dimen>
-    <dimen name="kapture_list_space_from_thumbail">10dp</dimen>
-    <dimen name="kapture_list_title">@dimen/default_font</dimen>
-    <dimen name="kapture_list_sub_title">@dimen/default_font_secondary_list</dimen>
-    <dimen name="kapture_list_select_icon">30dp</dimen>
-    <dimen name="kapture_list_btn">40dp</dimen>
-    <dimen name="kapture_list_btn_icon">25dp</dimen>
+    <dimen name="scrnshoot_list_height">135dp</dimen>
+    <dimen name="scrnshoot_list_padding_sides">12dp</dimen>
+    <dimen name="scrnshoot_list_padding_top_bottom">12dp</dimen>
+    <dimen name="scrnshoot_list_thumbnail_width_percentage">0.25</dimen>
+    <dimen name="scrnshoot_list_space_from_thumbail">10dp</dimen>
+    <dimen name="scrnshoot_list_title">@dimen/default_font</dimen>
+    <dimen name="scrnshoot_list_sub_title">@dimen/default_font_secondary_list</dimen>
+    <dimen name="scrnshoot_list_select_icon">30dp</dimen>
+    <dimen name="scrnshoot_list_btn">40dp</dimen>
+    <dimen name="scrnshoot_list_btn_icon">25dp</dimen>
 
-    <dimen name="kapture_grid_small_height">200dp</dimen>
-    <dimen name="kapture_grid_big_height">280dp</dimen>
-    <dimen name="kapture_grid_padding">5dp</dimen>
-    <dimen name="kapture_grid_title">@dimen/default_font_secondary</dimen>
-    <dimen name="kapture_grid_sub_title">@dimen/default_font_secondary_list</dimen>
-    <dimen name="kapture_grid_select_icon">25dp</dimen>
-    <dimen name="kapture_grid_time_padding_sides">5dp</dimen>
-    <dimen name="kapture_grid_el_radius">@dimen/default_btn_radius</dimen>
+    <dimen name="scrnshoot_grid_small_height">200dp</dimen>
+    <dimen name="scrnshoot_grid_big_height">280dp</dimen>
+    <dimen name="scrnshoot_grid_padding">5dp</dimen>
+    <dimen name="scrnshoot_grid_title">@dimen/default_font_secondary</dimen>
+    <dimen name="scrnshoot_grid_sub_title">@dimen/default_font_secondary_list</dimen>
+    <dimen name="scrnshoot_grid_select_icon">25dp</dimen>
+    <dimen name="scrnshoot_grid_time_padding_sides">5dp</dimen>
+    <dimen name="scrnshoot_grid_el_radius">@dimen/default_btn_radius</dimen>
 
     <dimen name="select_text">@dimen/default_font_list_title</dimen>
 

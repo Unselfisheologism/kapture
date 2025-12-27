@@ -136,7 +136,7 @@
 
                 <data
                     android:host="*"
-                    android:pathPrefix="/kapture"
+                    android:pathPrefix="/scrnshoot"
                     android:scheme="wear" />
             </intent-filter>
         </service>
