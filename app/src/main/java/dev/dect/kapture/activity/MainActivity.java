@@ -114,31 +114,35 @@ public class MainActivity extends AppCompatActivity {
     private void initBillingManager() {
         if (!ProVersionManager.isProVersion(this)) {
             BILLING_MANAGER = BillingManager.getInstance(this);
-            BILLING_MANAGER.setListener(new BillingManager.BillingClientListener() {
-                @Override
-                public void onBillingClientReady() {
-                    BILLING_MANAGER.queryProductDetails();
-                }
-
-                @Override
-                public void onBillingClientError(String message) {
-                    // Handle error silently
-                }
-
-                @Override
-                public void onPurchaseVerified(boolean success) {
-                    if (success) {
-                        ProVersionManager.invalidateCache();
-                        recreate();
+            
+            // Only initialize billing if it's available (free version)
+            if (BILLING_MANAGER.isBillingAvailable()) {
+                BILLING_MANAGER.setListener(new BillingManager.BillingClientListener() {
+                    @Override
+                    public void onBillingClientReady() {
+                        BILLING_MANAGER.queryProductDetails();
                     }
-                }
 
-                @Override
-                public void onProductDetailsLoaded(com.android.billingclient.api.ProductDetails productDetails) {
-                    // Product details loaded
-                }
-            });
-            BILLING_MANAGER.startConnection();
+                    @Override
+                    public void onBillingClientError(String message) {
+                        // Handle error silently
+                    }
+
+                    @Override
+                    public void onPurchaseVerified(boolean success) {
+                        if (success) {
+                            ProVersionManager.invalidateCache();
+                            recreate();
+                        }
+                    }
+
+                    @Override
+                    public void onProductDetailsLoaded(Object productDetails) {
+                        // Product details loaded
+                    }
+                });
+                BILLING_MANAGER.startConnection();
+            }
         }
     }
 
