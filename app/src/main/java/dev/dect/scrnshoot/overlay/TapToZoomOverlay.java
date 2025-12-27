@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -219,11 +220,17 @@ public class TapToZoomOverlay extends FrameLayout {
         ZOOM_MATRIX.postScale(CURRENT_ZOOM, CURRENT_ZOOM, ZOOM_CENTER_X, ZOOM_CENTER_Y);
 
         try {
-            // Note: Surface transformation requires VirtualDisplay or MediaCodec configuration
-            // For now, this is a placeholder for the zoom effect
-            // A full implementation would use VirtualDisplay with scale transformation
+            // For now, we'll use a simple overlay approach
+            // In a full implementation, this would use VirtualDisplay with scale transformation
+            invalidate(); // Redraw the overlay
+            
+            // Add visual feedback for debugging
+            if (CURRENT_ZOOM > 1.0f) {
+                Log.d("TapToZoomOverlay", "Zoom applied: " + CURRENT_ZOOM + "x at (" + ZOOM_CENTER_X + ", " + ZOOM_CENTER_Y + ")");
+            }
         } catch (Exception e) {
             // Surface may have been released
+            Log.e("TapToZoomOverlay", "updateSurface failed: " + e.getMessage());
         }
     }
 

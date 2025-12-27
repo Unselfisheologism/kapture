@@ -33,6 +33,7 @@ import dev.dect.scrnshoot.overlay.Overlay;
 import dev.dect.scrnshoot.utils.KMediaProjection;
 import dev.dect.scrnshoot.utils.KProfile;
 import dev.dect.scrnshoot.utils.Utils;
+import dev.dect.scrnshoot.utils.WatermarkProcessor;
 
 /** @noinspection resource*/
 public class CapturingService extends AccessibilityService {
@@ -395,7 +396,11 @@ public class CapturingService extends AccessibilityService {
                     processAndSaveHelper(scrnshootFile, onComplete);
                 }
             } else {
-                KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
+                if (WatermarkProcessor.addDefaultWatermark(SCREEN_MIC_RECORDER.getFile().getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this)) {
+                    // Watermark added successfully
+                } else {
+                    KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
+                }
 
                 try {
                     final String scrnshootFileName = KFile.getDefaultScrnshootFileName(this),
@@ -416,9 +421,12 @@ public class CapturingService extends AccessibilityService {
                 processAndSaveHelper(scrnshootFile, onComplete);
             }
         } else {
-            KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
-
-            processAndSaveHelper(scrnshootFile, onComplete);
+            if (WatermarkProcessor.addDefaultWatermark(SCREEN_MIC_RECORDER.getFile().getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this)) {
+                processAndSaveHelper(scrnshootFile, onComplete);
+            } else {
+                KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
+                processAndSaveHelper(scrnshootFile, onComplete);
+            }
         }
     }
 
