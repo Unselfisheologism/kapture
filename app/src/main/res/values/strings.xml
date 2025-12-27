@@ -773,4 +773,78 @@
     <!-- Ad related -->
     <string name="ad_banner">Advertisement</string>
     <string name="ad_loading">Loading ad…</string>
+
+    <!-- Pricing Page -->
+    <string name="pricing_title">Upgrade to Pro</string>
+    <string name="pricing_subtitle">Unlock all premium features forever</string>
+    <string name="pricing_one_time_price">$5.99</string>
+    <string name="pricing_one_time_description">One-time payment, yours forever</string>
+    <string name="pricing_btn_upgrade">Upgrade to Pro</string>
+    <string name="pricing_btn_get_pro">Get Pro Version</string>
+    <string name="pricing_restore_purchase">Restore Purchase</string>
+    <string name="pricing_guarantee">30-day money-back guarantee</string>
+    <string name="pricing_already_pro">You\'re a Pro!</string>
+    <string name="pricing_enjoy_pro">Enjoy all premium features with no limitations.</string>
+
+    <string name="pricing_feature_no_ads">✓ No advertisements</string>
+    <string name="pricing_feature_custom_watermark">✓ Custom watermark support</string>
+    <string name="pricing_feature_tap_to_zoom">✓ Tap-to-Zoom recording</string>
+    <string name="pricing_feature_no_time_limit">✓ No time limits</string>
+    <string name="pricing_feature_priority_support">✓ Priority support</string>
+    <string name="pricing_feature_all_future_features">✓ All future Pro features</string>
+    <string name="pricing_feature_export">✓ Advanced export options</string>
+
+    <string name="toast_error_billing_not_available">Billing is not available. Please try again later.</string>
+
+    <!-- Video Editor -->
+    <string name="editor_title">Video Editor</string>
+    <string name="editor_btn_add_overlay">Add Overlay</string>
+    <string name="editor_btn_export">Export</string>
+    <string name="editor_btn_cancel">Cancel</string>
+    <string name="editor_overlay_text">Text</string>
+    <string name="editor_overlay_image">Image</string>
+    <string name="editor_overlay_watermark">Watermark</string>
+    <string name="editor_timeline_start">Start</string>
+    <string name="editor_timeline_end">End</string>
+    <string name="editor_timeline_duration">Duration: %s</string>
+    <string name="editor_text_hint">Enter your text</string>
+    <string name="editor_text_size">Text Size</string>
+    <string name="editor_text_color">Text Color</string>
+    <string name="editor_text_position">Position</string>
+    <string name="editor_opacity">Opacity</string>
+    <string name="editor_size">Size</string>
+    <string name="editor_overlay_delete">Delete Overlay</string>
+    <string name="editor_overlay_edit">Edit Overlay</string>
+    <string name="editor_export_progress">Exporting: %d%%</string>
+    <string name="editor_export_success">Video exported successfully!</string>
+    <string name="editor_export_failed">Export failed. Please try again.</string>
+    <string name="editor_no_overlays">No overlays added yet. Tap "Add Overlay" to get started.</string>
+    <string name="editor_select_video">Select Video</string>
+    <string name="editor_add_text">Add Text</string>
+    <string name="editor_add_image">Add Image</string>
+    <string name="editor_add_watermark">Add Watermark</string>
+
+    <!-- Editor feature cards -->
+    <string name="editor_feature_text">Add custom text with various fonts and colors</string>
+    <string name="editor_feature_image">Overlay images and logos on your video</string>
+    <string name="editor_feature_watermark">Add watermarks with custom positioning</string>
+
+    <!-- Default watermark -->
+    <string name="default_watermark_text">Recorded with Scrnshoot</string>
+
+    <!-- Watermark positions -->
+    <string-array name="watermark_positions">
+        <item>Top Left</item>
+        <item>Top Center</item>
+        <item>Top Right</item>
+        <item>Middle Left</item>
+        <item>Center</item>
+        <item>Middle Right</item>
+        <item>Bottom Left</item>
+        <item>Bottom Center</item>
+        <item>Bottom Right</item>
+    </string-array>
+
+    <!-- Icons -->
+    <string name="icon_check">✓</string>
 </resources>

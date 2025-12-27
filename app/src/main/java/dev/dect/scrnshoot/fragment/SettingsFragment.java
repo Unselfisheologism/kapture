@@ -40,6 +40,7 @@ import java.util.Arrays;
 import dev.dect.scrnshoot.R;
 import dev.dect.scrnshoot.activity.AboutActivity;
 import dev.dect.scrnshoot.activity.FilePickerActivity;
+import dev.dect.scrnshoot.activity.PricingActivity;
 import dev.dect.scrnshoot.activity.MainActivity;
 import dev.dect.scrnshoot.activity.TokenActivity;
 import dev.dect.scrnshoot.activity.installer.InstallActivity;
@@ -339,11 +340,7 @@ public class SettingsFragment extends Fragment {
             new ListButton(
                 R.string.setting_pro_upgrade,
                 R.string.setting_pro_upgrade_description,
-                () -> {
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).showProUpgradeDialog();
-                    }
-                },
+                () -> PricingActivity.open(CONTEXT),
                 true
             )
         );

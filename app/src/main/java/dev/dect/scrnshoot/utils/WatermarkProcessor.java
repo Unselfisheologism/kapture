@@ -37,7 +37,7 @@ public class WatermarkProcessor {
     private static final String TAG = WatermarkProcessor.class.getSimpleName();
 
     // Default watermark text for free version
-    private static final String DEFAULT_WATERMARK_TEXT = "Recorded with Scrnshoot";
+    public static final String DEFAULT_WATERMARK_TEXT = "Recorded with Scrnshoot";
 
     /**
      * Add default watermark to video file.
