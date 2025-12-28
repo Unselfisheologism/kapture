@@ -395,6 +395,7 @@ public class SettingsFragment extends Fragment {
                     break;
                 }
             }
+            final int selectedPositionIndex = activePositionIndex;
 
             final ArrayList<ListButtonSubText> listButtonSubTexts = new ArrayList<>();
 
@@ -434,7 +435,7 @@ public class SettingsFragment extends Fragment {
             listButtonSubTexts.add(
                 new ListButtonSubText(
                     R.string.setting_watermark_position,
-                    watermarkPositionsFormatted[activePositionIndex],
+                    watermarkPositionsFormatted[selectedPositionIndex],
                     (listButtonSubText) -> {
                         if (CapturingService.isRecording() || CapturingService.isProcessing()) {
                             Toast.makeText(CONTEXT, getString(R.string.toast_info_while_recording), Toast.LENGTH_SHORT).show();
@@ -445,7 +446,7 @@ public class SettingsFragment extends Fragment {
                             CONTEXT,
                             R.string.setting_watermark_position,
                             watermarkPositionsFormatted,
-                            activePositionIndex,
+                            selectedPositionIndex,
                             indexPicked -> {
                                 SP_PROFILE.edit().putInt(Constants.Sp.Profile.CUSTOM_WATERMARK_POSITION, watermarkPositions[indexPicked]).commit();
                                 rebuildRecyclerView();

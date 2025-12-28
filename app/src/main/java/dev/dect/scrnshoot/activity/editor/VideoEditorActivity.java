@@ -532,7 +532,9 @@ public class VideoEditorActivity extends AppCompatActivity {
 
             final BitmapOverlay bitmapOverlay = BitmapOverlay.createStaticBitmapOverlay(overlayBitmap);
             final OverlayEffect overlayEffect = new OverlayEffect(ImmutableList.of(bitmapOverlay));
-            final Effects effects = new Effects(ImmutableList.of(overlayEffect), ImmutableList.of());
+
+            @SuppressWarnings("rawtypes")
+            final Effects effects = new Effects(new ArrayList(), ImmutableList.of(overlayEffect));
 
             final EditedMediaItem editedVideo = new EditedMediaItem.Builder(MediaItem.fromUri(inputPath))
                 .setEffects(effects)
