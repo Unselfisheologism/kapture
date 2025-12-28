@@ -29,6 +29,9 @@ import androidx.media3.transformer.Transformer;
 import com.google.common.collect.ImmutableList;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -74,7 +77,7 @@ public class WatermarkProcessor {
             return copyFile(inputPath, outputPath);
         }
 
-        final String text;
+        String text;
         try {
             text = context.getString(R.string.default_watermark_text);
         } catch (Exception ignore) {
@@ -160,7 +163,9 @@ public class WatermarkProcessor {
 
             final BitmapOverlay bitmapOverlay = BitmapOverlay.createStaticBitmapOverlay(overlayBitmap);
             final OverlayEffect overlayEffect = new OverlayEffect(ImmutableList.of(bitmapOverlay));
-            final Effects effects = new Effects(ImmutableList.of(overlayEffect), ImmutableList.of());
+
+            @SuppressWarnings("rawtypes")
+            final Effects effects = new Effects(new ArrayList(), ImmutableList.of(overlayEffect));
 
             final EditedMediaItem editedVideo = new EditedMediaItem.Builder(MediaItem.fromUri(inputPath))
                 .setEffects(effects)
