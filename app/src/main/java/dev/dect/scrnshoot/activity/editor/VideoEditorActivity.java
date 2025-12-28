@@ -277,7 +277,7 @@ public class VideoEditorActivity extends AppCompatActivity {
         }
 
         // Add margin
-        int margin = Utils.dpToPx(this, 16);
+        int margin = Utils.Converter.dpToPx(this, 16);
         if (params instanceof ViewGroup.MarginLayoutParams) {
             ((ViewGroup.MarginLayoutParams) params).setMargins(margin, margin, margin, margin);
         }
@@ -340,6 +340,7 @@ public class VideoEditorActivity extends AppCompatActivity {
         new DialogPopup(
             this,
             R.string.editor_overlay_text,
+            "",
             R.string.popup_btn_ok,
             () -> {
                 String overlayText = editText.getText().toString();
