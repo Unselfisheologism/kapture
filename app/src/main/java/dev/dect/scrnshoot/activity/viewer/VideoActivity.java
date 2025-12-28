@@ -191,10 +191,17 @@ public class VideoActivity extends AppCompatActivity {
 
             menu.setGroupDividerEnabled(true);
 
+            // Pro-only editor
+            menu.findItem(R.id.menuEdit).setVisible(dev.dect.scrnshoot.data.ProVersionManager.isProVersion(this));
+
             popupMenu.setOnMenuItemClickListener((item) -> {
                 final int id = item.getItemId();
 
-                if(id == R.id.menuOpenWith) {
+                if(id == R.id.menuEdit) {
+                    final android.content.Intent intent = new android.content.Intent(this, dev.dect.scrnshoot.activity.editor.VideoEditorActivity.class);
+                    intent.putExtra(dev.dect.scrnshoot.activity.editor.VideoEditorActivity.EXTRA_VIDEO_PATH, FILE.getAbsolutePath());
+                    startActivity(intent);
+                } else if(id == R.id.menuOpenWith) {
                     KFile.openFile(this, FILE, true);
                 } else if(id == R.id.menuShare) {
                     KFile.shareFile(this, FILE);

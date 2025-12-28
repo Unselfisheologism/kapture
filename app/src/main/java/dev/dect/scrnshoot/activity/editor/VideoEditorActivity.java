@@ -4,11 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +30,25 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.effect.BitmapOverlay;
+import androidx.media3.effect.Effects;
+import androidx.media3.effect.OverlayEffect;
+import androidx.media3.transformer.Composition;
+import androidx.media3.transformer.EditedMediaItem;
+import androidx.media3.transformer.EditedMediaItemSequence;
+import androidx.media3.transformer.ExportException;
+import androidx.media3.transformer.ExportResult;
+import androidx.media3.transformer.Transformer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.common.collect.ImmutableList;
 
 import dev.dect.scrnshoot.R;
 import dev.dect.scrnshoot.data.KSettings;
@@ -41,6 +63,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import dev.dect.scrnshoot.utils.KFile;
 
 /**
  * Simple video editor with overlay support and timeline editing.
@@ -55,6 +82,8 @@ public class VideoEditorActivity extends AppCompatActivity {
     private static final int SIZE_DEFAULT = 24;
     private static final int POSITION_DEFAULT = android.view.Gravity.END | android.view.Gravity.BOTTOM;
     private static final int OPACITY_DEFAULT = 80;
+
+    private static final long EXPORT_TIMEOUT_MS = 10 * 60 * 1000; // 10 min
 
     private VideoView VIDEO_VIEW;
     private ViewGroup OVERLAY_CONTAINER;
@@ -431,10 +460,216 @@ public class VideoEditorActivity extends AppCompatActivity {
             return;
         }
 
-        // For now, just copy the file
-        // In a full implementation, we would use Media3 Transformer to add overlays
-        Toast.makeText(this, R.string.editor_export_success, Toast.LENGTH_SHORT).show();
-        finish();
+        Toast.makeText(this, R.string.notification_processing_message, Toast.LENGTH_SHORT).show();
+
+        new Thread(() -> {
+            boolean ok = exportVideoWithOverlays();
+
+            runOnUiThread(() -> {
+                if (ok) {
+                    Toast.makeText(this, R.string.editor_export_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.toast_error_generic, Toast.LENGTH_SHORT).show();
+                }
+                finish();
+            });
+        }).start();
+    }
+
+    private boolean exportVideoWithOverlays() {
+        final File input = new File(VIDEO_PATH);
+
+        final VideoSize videoSize = getVideoSize(VIDEO_PATH);
+        if (videoSize.width <= 0 || videoSize.height <= 0) {
+            return false;
+        }
+
+        final Bitmap overlayBitmap = Bitmap.createBitmap(videoSize.width, videoSize.height, Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(overlayBitmap);
+
+        for (OverlayItem overlay : OVERLAYS) {
+            if (overlay.getType() == OverlayType.TEXT || overlay.getType() == OverlayType.WATERMARK) {
+                drawTextOverlay(canvas, overlay, videoSize.width, videoSize.height);
+            } else if (overlay.getType() == OverlayType.IMAGE) {
+                drawImageOverlay(canvas, overlay, videoSize.width, videoSize.height);
+            }
+        }
+
+        File output = new File(input.getParentFile(), KFile.removeFileExtension(input.getName()) + "_edited." + KFile.getFileExtension(input));
+        output = KFile.renameIfNecessary(output);
+
+        return exportWithOverlayBitmap(VIDEO_PATH, output.getAbsolutePath(), overlayBitmap);
+    }
+
+    @OptIn(markerClass = UnstableApi.class)
+    private boolean exportWithOverlayBitmap(@NonNull String inputPath, @NonNull String outputPath, @NonNull Bitmap overlayBitmap) {
+        final AtomicBoolean success = new AtomicBoolean(false);
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            if (new File(outputPath).exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                new File(outputPath).delete();
+            }
+
+            final Transformer transformer = new Transformer.Builder(this)
+                .setVideoMimeType(MimeTypes.VIDEO_H264)
+                .setAudioMimeType(MimeTypes.AUDIO_AAC)
+                .build();
+
+            transformer.addListener(new Transformer.Listener() {
+                @Override
+                public void onCompleted(Composition composition, ExportResult exportResult) {
+                    success.set(true);
+                    latch.countDown();
+                }
+
+                @Override
+                public void onError(Composition composition, ExportResult exportResult, ExportException exportException) {
+                    latch.countDown();
+                }
+            });
+
+            final BitmapOverlay bitmapOverlay = BitmapOverlay.createStaticBitmapOverlay(overlayBitmap);
+            final OverlayEffect overlayEffect = new OverlayEffect(ImmutableList.of(bitmapOverlay));
+            final Effects effects = new Effects(ImmutableList.of(overlayEffect), ImmutableList.of());
+
+            final EditedMediaItem editedVideo = new EditedMediaItem.Builder(MediaItem.fromUri(inputPath))
+                .setEffects(effects)
+                .build();
+
+            final Composition composition = new Composition.Builder(new EditedMediaItemSequence(editedVideo)).build();
+
+            transformer.start(composition, outputPath);
+
+            //noinspection ResultOfMethodCallIgnored
+            latch.await(EXPORT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+
+            return success.get() && new File(outputPath).exists() && new File(outputPath).length() > 0;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            try {
+                if (!overlayBitmap.isRecycled()) {
+                    overlayBitmap.recycle();
+                }
+            } catch (Exception ignore) {}
+        }
+    }
+
+    private void drawTextOverlay(@NonNull Canvas canvas, @NonNull OverlayItem overlay, int videoWidth, int videoHeight) {
+        final String text = overlay.getText();
+        if (text == null || text.trim().isEmpty()) {
+            return;
+        }
+
+        final float textSizePx = overlay.getSize() * getResources().getDisplayMetrics().scaledDensity;
+
+        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(overlay.getColor());
+        paint.setTextSize(textSizePx);
+        paint.setShadowLayer(3f, 2f, 2f, Color.BLACK);
+        paint.setAlpha((int) (255 * (Math.max(0, Math.min(100, overlay.getOpacity())) / 100f)));
+
+        final Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+
+        final float margin = Math.max(16f, videoWidth * 0.02f);
+
+        float x;
+        if ((overlay.getPosition() & Gravity.END) != 0) {
+            x = videoWidth - bounds.width() - margin;
+        } else if ((overlay.getPosition() & Gravity.CENTER_HORIZONTAL) != 0 || (overlay.getPosition() & Gravity.CENTER) != 0) {
+            x = (videoWidth - bounds.width()) / 2f;
+        } else {
+            x = margin;
+        }
+
+        float y;
+        if ((overlay.getPosition() & Gravity.BOTTOM) != 0) {
+            y = videoHeight - margin;
+        } else if ((overlay.getPosition() & Gravity.CENTER_VERTICAL) != 0 || (overlay.getPosition() & Gravity.CENTER) != 0) {
+            y = (videoHeight + bounds.height()) / 2f;
+        } else {
+            y = bounds.height() + margin;
+        }
+
+        canvas.drawText(text, x, y, paint);
+    }
+
+    private void drawImageOverlay(@NonNull Canvas canvas, @NonNull OverlayItem overlay, int videoWidth, int videoHeight) {
+        final String path = overlay.getImagePath();
+        if (path == null || !(new File(path).exists())) {
+            return;
+        }
+
+        final Bitmap image = BitmapFactory.decodeFile(path);
+        if (image == null) {
+            return;
+        }
+
+        final float margin = Math.max(16f, videoWidth * 0.02f);
+
+        final float maxWidth = videoWidth * 0.30f;
+        final float maxHeight = videoHeight * 0.30f;
+        final float scale = Math.min(maxWidth / image.getWidth(), maxHeight / image.getHeight());
+
+        final int drawW = Math.max(1, (int) (image.getWidth() * scale));
+        final int drawH = Math.max(1, (int) (image.getHeight() * scale));
+
+        float left;
+        if ((overlay.getPosition() & Gravity.END) != 0) {
+            left = videoWidth - drawW - margin;
+        } else if ((overlay.getPosition() & Gravity.CENTER_HORIZONTAL) != 0 || (overlay.getPosition() & Gravity.CENTER) != 0) {
+            left = (videoWidth - drawW) / 2f;
+        } else {
+            left = margin;
+        }
+
+        float top;
+        if ((overlay.getPosition() & Gravity.BOTTOM) != 0) {
+            top = videoHeight - drawH - margin;
+        } else if ((overlay.getPosition() & Gravity.CENTER_VERTICAL) != 0 || (overlay.getPosition() & Gravity.CENTER) != 0) {
+            top = (videoHeight - drawH) / 2f;
+        } else {
+            top = margin;
+        }
+
+        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setAlpha((int) (255 * (Math.max(0, Math.min(100, overlay.getOpacity())) / 100f)));
+
+        final Rect dst = new Rect((int) left, (int) top, (int) left + drawW, (int) top + drawH);
+        canvas.drawBitmap(image, null, dst, paint);
+    }
+
+    private VideoSize getVideoSize(@NonNull String inputPath) {
+        final MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(inputPath);
+            final String widthStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+            final String heightStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+
+            int width = widthStr != null ? Integer.parseInt(widthStr) : -1;
+            int height = heightStr != null ? Integer.parseInt(heightStr) : -1;
+
+            return new VideoSize(width, height);
+        } catch (Exception e) {
+            return new VideoSize(-1, -1);
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception ignore) {}
+        }
+    }
+
+    private static class VideoSize {
+        final int width;
+        final int height;
+
+        VideoSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
     }
 
     @Override
