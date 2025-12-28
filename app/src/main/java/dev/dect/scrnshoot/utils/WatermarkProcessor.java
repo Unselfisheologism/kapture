@@ -57,23 +57,54 @@ public class WatermarkProcessor {
      * - Free build (not unlocked): applies default watermark.
      */
     public static boolean applyWatermark(@NonNull String inputPath, @NonNull String outputPath, @NonNull KSettings ks, @NonNull Context context) {
-        if (ks.isToUseCustomWatermark()) {
-            final String imagePath = ks.getCustomWatermarkImagePath();
-            if (imagePath != null && new File(imagePath).exists()) {
-                return addImageWatermark(inputPath, outputPath, imagePath, ks.getCustomWatermarkPosition(), ks.getCustomWatermarkOpacity(), context);
+        try {
+            Log.d(TAG, "applyWatermark: isToUseCustomWatermark=" + ks.isToUseCustomWatermark() + 
+                      ", shouldShowDefaultWatermark=" + ks.shouldShowDefaultWatermark());
+
+            if (ks.isToUseCustomWatermark()) {
+                final String imagePath = ks.getCustomWatermarkImagePath();
+                Log.d(TAG, "Custom watermark enabled. Image path: " + imagePath);
+                
+                if (imagePath != null && new File(imagePath).exists()) {
+                    Log.d(TAG, "Using image watermark");
+                    return addImageWatermark(inputPath, outputPath, imagePath, ks.getCustomWatermarkPosition(), ks.getCustomWatermarkOpacity(), context);
+                }
+
+                final String text = ks.getCustomWatermarkText();
+                Log.d(TAG, "Using text watermark: " + text);
+                if (text != null && !text.trim().isEmpty()) {
+                    return addTextWatermark(inputPath, outputPath, text, ks.getCustomWatermarkPosition(), ks.getCustomWatermarkOpacity(), ks.getCustomWatermarkSize(), context);
+                }
+
+                Log.w(TAG, "Custom watermark settings are invalid, falling back to default");
+                // Fallback to default watermark if custom watermark settings are invalid
+                return addDefaultWatermark(inputPath, outputPath, ks, context);
             }
 
-            return addTextWatermark(inputPath, outputPath, ks.getCustomWatermarkText(), ks.getCustomWatermarkPosition(), ks.getCustomWatermarkOpacity(), ks.getCustomWatermarkSize(), context);
+            Log.d(TAG, "Using default watermark");
+            return addDefaultWatermark(inputPath, outputPath, ks, context);
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying watermark: " + e.getMessage());
+            e.printStackTrace();
+            // Fallback to simple file copy if watermark processing fails
+            return copyFile(inputPath, outputPath);
         }
-
-        return addDefaultWatermark(inputPath, outputPath, ks, context);
     }
 
     /**
      * Add default watermark to video file (Free build only).
      */
     public static boolean addDefaultWatermark(@NonNull String inputPath, @NonNull String outputPath, @NonNull KSettings ks, @NonNull Context context) {
-        if (!ProVersionManager.shouldShowDefaultWatermark(context)) {
+        // Debug logging to help identify the issue
+        boolean shouldShowWatermark = ProVersionManager.shouldShowDefaultWatermark(context);
+        boolean isFreeBuild = ProVersionManager.isFreeBuild();
+        boolean isProVersion = ProVersionManager.isProVersion(context);
+        
+        Log.d(TAG, "addDefaultWatermark: shouldShowWatermark=" + shouldShowWatermark + 
+                  ", isFreeBuild=" + isFreeBuild + 
+                  ", isProVersion=" + isProVersion);
+
+        if (!shouldShowWatermark) {
             return copyFile(inputPath, outputPath);
         }
 

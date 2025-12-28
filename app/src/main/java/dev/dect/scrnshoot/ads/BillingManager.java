@@ -161,9 +161,17 @@ public class BillingManager {
     /**
      * Store billing client reference (using reflection).
      */
+    private Object storedBillingClient;
+
     private void storeBillingClient(Object billingClient) {
-        // This method stores the billing client for later use
-        // In a real implementation, you'd keep this as a field
+        this.storedBillingClient = billingClient;
+    }
+
+    /**
+     * Get the stored billing client instance.
+     */
+    private Object getBillingClient() {
+        return storedBillingClient;
     }
 
     /**
@@ -172,6 +180,61 @@ public class BillingManager {
     public void queryProductDetails() {
         // This would query product details from the billing library
         Log.d(TAG, "Query product details for: " + SKU_PRO_VERSION);
+        
+        try {
+            Object billingClient = getBillingClient();
+            if (billingClient == null || !IS_READY) {
+                return;
+            }
+
+            // Create QueryProductDetailsParams
+            Class<?> queryProductDetailsParamsClass = Class.forName("com.android.billingclient.api.QueryProductDetailsParams");
+            Object queryProductDetailsParams = queryProductDetailsParamsClass.getMethod("newBuilder")
+                    .invoke(null);
+
+            // Create Product object
+            Class<?> productClass = Class.forName("com.android.billingclient.api.Product");
+            Object product = productClass.getMethod("newBuilder")
+                    .invoke(null);
+            product.getClass().getMethod("setProductId", String.class)
+                    .invoke(product, SKU_PRO_VERSION);
+            product.getClass().getMethod("setProductType", String.class)
+                    .invoke(product, "inapp");
+            Object productBuilt = product.getClass().getMethod("build").invoke(product);
+
+            // Add product to params
+            java.util.List<Object> productList = new java.util.ArrayList<>();
+            productList.add(productBuilt);
+            queryProductDetailsParams.getClass().getMethod("setProductList", java.util.List.class)
+                    .invoke(queryProductDetailsParams, productList);
+            Object paramsBuilt = queryProductDetailsParams.getClass().getMethod("build").invoke(queryProductDetailsParams);
+
+            // Query product details
+            Class<?> productDetailsResponseListenerClass = Class.forName("com.android.billingclient.api.ProductDetailsResponseListener");
+            Object listener = java.lang.reflect.Proxy.newProxyInstance(
+                    productDetailsResponseListenerClass.getClassLoader(),
+                    new Class<?>[]{productDetailsResponseListenerClass},
+                    (proxy, method, args) -> {
+                        if ("onProductDetailsResponse".equals(method.getName())) {
+                            Object billingResult = args[0];
+                            @SuppressWarnings("unchecked")
+                            java.util.List<?> productDetailsList = (java.util.List<?>) args[1];
+                            if (productDetailsList != null && !productDetailsList.isEmpty()) {
+                                Object productDetails = productDetailsList.get(0);
+                                if (LISTENER != null) {
+                                    LISTENER.onProductDetailsLoaded(productDetails);
+                                }
+                            }
+                        }
+                        return null;
+                    });
+
+            billingClient.getClass().getMethod("queryProductDetailsAsync", queryProductDetailsParamsClass, productDetailsResponseListenerClass)
+                    .invoke(billingClient, paramsBuilt, listener);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error querying product details: " + e.getMessage());
+        }
     }
 
     /**
@@ -239,8 +302,39 @@ public class BillingManager {
 
         Log.d(TAG, "Launching purchase flow for: " + SKU_PRO_VERSION);
 
-        // In a full implementation, this would launch the purchase flow
-        // using BillingFlowParams with the ProductDetails obtained from queryProductDetails()
+        try {
+            // Get the stored BillingClient instance
+            Object billingClient = getBillingClient();
+            if (billingClient == null) {
+                Log.e(TAG, "Billing client not available");
+                return;
+            }
+
+            // Create BillingFlowParams
+            Class<?> billingFlowParamsClass = Class.forName("com.android.billingclient.api.BillingFlowParams");
+            Object billingFlowParams = billingFlowParamsClass.getMethod("newBuilder")
+                    .invoke(null);
+
+            // Set the product details - for simplicity, we'll use the SKU directly
+            // In a production app, you would use the ProductDetails obtained from queryProductDetails()
+            billingFlowParamsClass.getMethod("setSkuDetails", Class.forName("com.android.billingclient.api.SkuDetails"))
+                    .invoke(billingFlowParams, createSkuDetails());
+
+            Object paramsBuilt = billingFlowParamsClass.getMethod("build").invoke(billingFlowParams);
+
+            // Launch the billing flow
+            int responseCode = (int) billingClient.getClass()
+                    .getMethod("launchBillingFlow", Activity.class, billingFlowParamsClass)
+                    .invoke(billingClient, activity, paramsBuilt);
+
+            if (responseCode != 0) { // BillingResponseCode.OK = 0
+                Log.e(TAG, "Failed to launch billing flow. Response code: " + responseCode);
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error launching purchase flow: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -343,6 +437,34 @@ public class BillingManager {
      */
     public boolean isProPurchased() {
         return ProVersionManager.isUnlockedViaIAP(CONTEXT);
+    }
+
+    /**
+     * Create a basic SkuDetails object for the purchase flow.
+     * This is a simplified version - in production, you would use the actual ProductDetails.
+     */
+    private Object createSkuDetails() {
+        try {
+            Class<?> skuDetailsClass = Class.forName("com.android.billingclient.api.SkuDetails");
+            Object skuDetails = skuDetailsClass.getMethod("newBuilder")
+                    .invoke(null);
+
+            skuDetailsClass.getMethod("setSku", String.class)
+                    .invoke(skuDetails, SKU_PRO_VERSION);
+            skuDetailsClass.getMethod("setType", String.class)
+                    .invoke(skuDetails, "inapp");
+            skuDetailsClass.getMethod("setPrice", String.class)
+                    .invoke(skuDetails, PRO_PRICE);
+            skuDetailsClass.getMethod("setTitle", String.class)
+                    .invoke(skuDetails, "Scrnshoot Pro Upgrade");
+            skuDetailsClass.getMethod("setDescription", String.class)
+                    .invoke(skuDetails, "Upgrade to Scrnshoot Pro version");
+
+            return skuDetailsClass.getMethod("build").invoke(skuDetails);
+        } catch (Exception e) {
+            Log.e(TAG, "Error creating SkuDetails: " + e.getMessage());
+            return null;
+        }
     }
 
     /**

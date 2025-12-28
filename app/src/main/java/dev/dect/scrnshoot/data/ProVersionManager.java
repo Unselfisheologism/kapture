@@ -47,7 +47,10 @@ public class ProVersionManager {
             cachedIsPro = loadProStatus(context);
             cacheInitialized = true;
         }
-        return cachedIsPro || isProBuild();
+        // Pro version is available if either:
+        // 1. This is the pro build flavor, OR
+        // 2. This is the free build but has been unlocked via IAP
+        return isProBuild() || cachedIsPro;
     }
 
     /**
@@ -148,6 +151,11 @@ public class ProVersionManager {
      * @return true if default watermark should be added
      */
     public static boolean shouldShowDefaultWatermark(Context context) {
-        return isFreeBuild() && !isProVersion(context);
+        // For free builds, always show default watermark unless explicitly unlocked via IAP
+        if (isFreeBuild()) {
+            // Check if this is a free build that hasn't been unlocked via IAP
+            return !isUnlockedViaIAP(context);
+        }
+        return false;
     }
 }
