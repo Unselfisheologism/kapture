@@ -315,10 +315,8 @@ public class SettingsFragment extends Fragment {
         concatAdapter.addAdapter(buildAndGetExtraAudioGroupAdapter(settings));
         concatAdapter.addAdapter(buildAndGetWifiShareGroupAdapter());
 
-        // Add Pro features group for free version
-        if (ProVersionManager.shouldShowAds(CONTEXT)) {
-            concatAdapter.addAdapter(buildAndGetProGroupAdapter(settings));
-        }
+        // Add Pro / Upgrade group
+        concatAdapter.addAdapter(buildAndGetProGroupAdapter(settings));
 
         concatAdapter.addAdapter(buildAndGetAppGroupAdapter());
 
@@ -328,30 +326,33 @@ public class SettingsFragment extends Fragment {
     }
 
     /**
-     * Build Pro features settings group for free version.
+     * Build the Pro / Upgrade group.
+     *
+     * - Free (not unlocked): shows "Upgrade to Pro" entry.
+     * - Pro (paid APK or IAP-unlocked): shows Pro-only settings.
      */
     private ListGroup.Adapter buildAndGetProGroupAdapter(KSettings settings) {
         final ConcatAdapter concatAdapter = new ConcatAdapter();
 
-        // Pro upgrade button
-        final ArrayList<ListButton> listButtons0 = new ArrayList<>();
+        final boolean isPro = ProVersionManager.isProVersion(CONTEXT);
 
-        listButtons0.add(
-            new ListButton(
-                R.string.setting_pro_upgrade,
-                R.string.setting_pro_upgrade_description,
-                () -> PricingActivity.open(CONTEXT),
-                true
-            )
-        );
+        if (!isPro) {
+            final ArrayList<ListButton> listButtons = new ArrayList<>();
 
-        concatAdapter.addAdapter(new ListButton.Adapter(listButtons0));
+            listButtons.add(
+                new ListButton(
+                    R.string.setting_pro_upgrade,
+                    R.string.setting_pro_upgrade_description,
+                    () -> PricingActivity.open(CONTEXT),
+                    true
+                )
+            );
 
-        // Tap-to-Zoom settings (Pro exclusive) - only show if pro
-        if (ProVersionManager.isProVersion(CONTEXT)) {
-            final ArrayList<ListSwitch> listSwitches0 = new ArrayList<>();
+            concatAdapter.addAdapter(new ListButton.Adapter(listButtons));
+        } else {
+            final ArrayList<ListSwitch> listSwitches = new ArrayList<>();
 
-            listSwitches0.add(
+            listSwitches.add(
                 new ListSwitch(
                     R.string.setting_tap_to_zoom,
                     R.string.setting_tap_to_zoom_description,
@@ -361,14 +362,7 @@ public class SettingsFragment extends Fragment {
                 )
             );
 
-            concatAdapter.addAdapter(new ListSwitch.Adapter(listSwitches0, false));
-        }
-
-        // Watermark settings - only show if pro
-        if (ProVersionManager.isProVersion(CONTEXT)) {
-            final ArrayList<ListSwitch> listSwitches1 = new ArrayList<>();
-
-            listSwitches1.add(
+            listSwitches.add(
                 new ListSwitch(
                     R.string.setting_watermark_custom,
                     R.string.setting_watermark_custom_description,
@@ -378,7 +372,159 @@ public class SettingsFragment extends Fragment {
                 )
             );
 
-            concatAdapter.addAdapter(new ListSwitch.Adapter(listSwitches1, true));
+            concatAdapter.addAdapter(new ListSwitch.Adapter(listSwitches, false));
+
+            final int[] watermarkPositions = new int[] {
+                Gravity.TOP | Gravity.START,
+                Gravity.TOP | Gravity.CENTER_HORIZONTAL,
+                Gravity.TOP | Gravity.END,
+                Gravity.CENTER_VERTICAL | Gravity.START,
+                Gravity.CENTER,
+                Gravity.CENTER_VERTICAL | Gravity.END,
+                Gravity.BOTTOM | Gravity.START,
+                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL,
+                Gravity.BOTTOM | Gravity.END
+            };
+
+            final String[] watermarkPositionsFormatted = getResources().getStringArray(R.array.watermark_positions);
+
+            int activePositionIndex = 8;
+            for (int i = 0; i < watermarkPositions.length; i++) {
+                if (watermarkPositions[i] == settings.getCustomWatermarkPosition()) {
+                    activePositionIndex = i;
+                    break;
+                }
+            }
+
+            final ArrayList<ListButtonSubText> listButtonSubTexts = new ArrayList<>();
+
+            listButtonSubTexts.add(
+                new ListButtonSubText(
+                    R.string.setting_watermark_text,
+                    settings.getCustomWatermarkText(),
+                    (listButtonSubText) -> {
+                        if (CapturingService.isRecording() || CapturingService.isProcessing()) {
+                            Toast.makeText(CONTEXT, getString(R.string.toast_info_while_recording), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        new InputPopup.Text(
+                            CONTEXT,
+                            R.string.setting_watermark_text,
+                            settings.getCustomWatermarkText(),
+                            R.string.popup_btn_set,
+                            new InputPopup.OnInputPopupListener() {
+                                @Override
+                                public void onStringInputSet(String input) {
+                                    SP_PROFILE.edit().putString(Constants.Sp.Profile.CUSTOM_WATERMARK_TEXT, input).commit();
+                                    rebuildRecyclerView();
+                                }
+                            },
+                            R.string.popup_btn_cancel,
+                            null,
+                            true,
+                            false,
+                            false
+                        ).show();
+                    },
+                    false
+                )
+            );
+
+            listButtonSubTexts.add(
+                new ListButtonSubText(
+                    R.string.setting_watermark_position,
+                    watermarkPositionsFormatted[activePositionIndex],
+                    (listButtonSubText) -> {
+                        if (CapturingService.isRecording() || CapturingService.isProcessing()) {
+                            Toast.makeText(CONTEXT, getString(R.string.toast_info_while_recording), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        new PickerPopup(
+                            CONTEXT,
+                            R.string.setting_watermark_position,
+                            watermarkPositionsFormatted,
+                            activePositionIndex,
+                            indexPicked -> {
+                                SP_PROFILE.edit().putInt(Constants.Sp.Profile.CUSTOM_WATERMARK_POSITION, watermarkPositions[indexPicked]).commit();
+                                rebuildRecyclerView();
+                            }
+                        ).show();
+                    },
+                    false
+                )
+            );
+
+            listButtonSubTexts.add(
+                new ListButtonSubText(
+                    R.string.setting_watermark_opacity,
+                    settings.getCustomWatermarkOpacity(),
+                    (listButtonSubText) -> {
+                        if (CapturingService.isRecording() || CapturingService.isProcessing()) {
+                            Toast.makeText(CONTEXT, getString(R.string.toast_info_while_recording), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        new InputPopup.NumberInteger(
+                            CONTEXT,
+                            R.string.setting_watermark_opacity,
+                            settings.getCustomWatermarkOpacity(),
+                            R.string.popup_btn_set,
+                            new InputPopup.OnInputPopupListener() {
+                                @Override
+                                public void onIntInputSet(int input) {
+                                    int value = Math.max(0, Math.min(100, input));
+                                    SP_PROFILE.edit().putInt(Constants.Sp.Profile.CUSTOM_WATERMARK_OPACITY, value).commit();
+                                    rebuildRecyclerView();
+                                }
+                            },
+                            R.string.popup_btn_cancel,
+                            null,
+                            true,
+                            false,
+                            false
+                        ).show();
+                    },
+                    false
+                )
+            );
+
+            listButtonSubTexts.add(
+                new ListButtonSubText(
+                    R.string.setting_watermark_size,
+                    settings.getCustomWatermarkSize(),
+                    (listButtonSubText) -> {
+                        if (CapturingService.isRecording() || CapturingService.isProcessing()) {
+                            Toast.makeText(CONTEXT, getString(R.string.toast_info_while_recording), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        new InputPopup.NumberInteger(
+                            CONTEXT,
+                            R.string.setting_watermark_size,
+                            settings.getCustomWatermarkSize(),
+                            R.string.popup_btn_set,
+                            new InputPopup.OnInputPopupListener() {
+                                @Override
+                                public void onIntInputSet(int input) {
+                                    int value = Math.max(8, Math.min(128, input));
+                                    SP_PROFILE.edit().putInt(Constants.Sp.Profile.CUSTOM_WATERMARK_SIZE, value).commit();
+                                    rebuildRecyclerView();
+                                }
+                            },
+                            R.string.popup_btn_cancel,
+                            null,
+                            true,
+                            false,
+                            false
+                        ).show();
+                    },
+                    true
+                )
+            );
+
+            concatAdapter.addAdapter(new ListButtonSubText.Adapter(listButtonSubTexts));
         }
 
         return new ListGroup.Adapter(new ListGroup(R.string.setting_group_pro, concatAdapter));

@@ -357,77 +357,104 @@ public class CapturingService extends AccessibilityService {
 
         KAPTURE.setFile(scrnshootFile);
 
-        if(KSETTINGS.isToRecordInternalAudio()) {
-            if(KSETTINGS.isToMergeInternalAudio()) {
-                try {
-                    KFile.combineAudioAndVideo(
-                        this,
-                        INTERNAL_AUDIO_RECORDER.getFile(),
-                        SCREEN_MIC_RECORDER.getFile(),
-                        scrnshootFile,
-                        () -> processAndSaveHelper(scrnshootFile, onComplete),
-                        () -> {
-                            IS_PROCESSING = false;
-                        }
-                    );
-                } catch (Exception e) {
-                    Log.e(TAG, "processAndSave: " + e.getMessage());
+        final boolean needsWatermark = KSETTINGS.isToUseCustomWatermark() || KSETTINGS.shouldShowDefaultWatermark();
 
+        if (KSETTINGS.isToRecordInternalAudio() && KSETTINGS.isToMergeInternalAudio()) {
+            final File mergedFile;
+
+            if (needsWatermark) {
+                mergedFile = new File(
+                    KSETTINGS.getSavingLocationFile(),
+                    scrnshootFile.getName().replaceAll("\\." + Constants.EXT_VIDEO_FORMAT + "$", "") + KFile.FILE_SEPARATOR + "merged." + Constants.EXT_VIDEO_FORMAT
+                );
+            } else {
+                mergedFile = scrnshootFile;
+            }
+
+            try {
+                KFile.combineAudioAndVideo(
+                    this,
+                    INTERNAL_AUDIO_RECORDER.getFile(),
+                    SCREEN_MIC_RECORDER.getFile(),
+                    mergedFile,
+                    () -> {
+                        if (!needsWatermark) {
+                            processAndSaveHelper(scrnshootFile, onComplete);
+                            return;
+                        }
+
+                        new Thread(() -> {
+                            boolean ok = WatermarkProcessor.applyWatermark(mergedFile.getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this);
+                            if (!ok) {
+                                KFile.copyFile(mergedFile, scrnshootFile);
+                            }
+
+                            //noinspection ResultOfMethodCallIgnored
+                            mergedFile.delete();
+
+                            processAndSaveHelper(scrnshootFile, onComplete);
+                        }).start();
+                    },
+                    () -> {
+                        IS_PROCESSING = false;
+                    }
+                );
+            } catch (Exception e) {
+                Log.e(TAG, "processAndSave: " + e.getMessage());
+
+                boolean ok = WatermarkProcessor.applyWatermark(SCREEN_MIC_RECORDER.getFile().getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this);
+                if (!ok) {
                     KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
+                }
 
-                    if(!KSETTINGS.isToGenerateAudio_OnlyInternal()) {
-                        final File helper = new File(KSETTINGS.getSavingLocationFile(), scrnshootFile.getName().replaceAll("." + Constants.EXT_VIDEO_FORMAT, "") + "." + Constants.EXT_AUDIO_FORMAT);
+                if(!KSETTINGS.isToGenerateAudio_OnlyInternal()) {
+                    final File helper = new File(KSETTINGS.getSavingLocationFile(), scrnshootFile.getName().replaceAll("." + Constants.EXT_VIDEO_FORMAT, "") + "." + Constants.EXT_AUDIO_FORMAT);
 
-                        try {
-                            KFile.copyFile(INTERNAL_AUDIO_RECORDER.getFile(), helper);
+                    try {
+                        KFile.copyFile(INTERNAL_AUDIO_RECORDER.getFile(), helper);
 
-                            KAPTURE.addExtra(new Scrnshoot.Extra(Scrnshoot.Extra.EXTRA_AUDIO_INTERNAL_ONLY, helper));
+                        KAPTURE.addExtra(new Scrnshoot.Extra(Scrnshoot.Extra.EXTRA_AUDIO_INTERNAL_ONLY, helper));
 
-                            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this, getString(R.string.toast_error_merging_2), Toast.LENGTH_SHORT).show());
-                        } catch (Exception e2) {
-                            Log.e(TAG, "processAndSave2: " + e.getMessage());
+                        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this, getString(R.string.toast_error_merging_2), Toast.LENGTH_SHORT).show());
+                    } catch (Exception e2) {
+                        Log.e(TAG, "processAndSave2: " + e.getMessage());
 
-                            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this, getString(R.string.toast_error_merging_1), Toast.LENGTH_SHORT).show());
-                        }
-                    } else {
                         new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this, getString(R.string.toast_error_merging_1), Toast.LENGTH_SHORT).show());
                     }
-
-                    processAndSaveHelper(scrnshootFile, onComplete);
-                }
-            } else {
-                if (WatermarkProcessor.addDefaultWatermark(SCREEN_MIC_RECORDER.getFile().getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this)) {
-                    // Watermark added successfully
                 } else {
-                    KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
-                }
-
-                try {
-                    final String scrnshootFileName = KFile.getDefaultScrnshootFileName(this),
-                                 audioFileName = scrnshootFile.getName().replaceAll(Constants.EXT_VIDEO_FORMAT, Constants.EXT_AUDIO_FORMAT);
-
-                    final File f = new File(
-                        KSETTINGS.getSavingLocationFile(),
-                        audioFileName.replaceAll(scrnshootFileName, Objects.requireNonNull(Scrnshoot.Extra.getFileNameComplementByType(this, Scrnshoot.Extra.EXTRA_AUDIO_INTERNAL_ONLY)))
-                    );
-
-                    KFile.copyFile(INTERNAL_AUDIO_RECORDER.getFile(), f);
-
-                    KAPTURE.addExtra(new Scrnshoot.Extra(Scrnshoot.Extra.EXTRA_AUDIO_INTERNAL_ONLY, f));
-                } catch (Exception e) {
-                    Log.e(TAG, "processAndSave3: " + e.getMessage());
+                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this, getString(R.string.toast_error_merging_1), Toast.LENGTH_SHORT).show());
                 }
 
                 processAndSaveHelper(scrnshootFile, onComplete);
             }
-        } else {
-            if (WatermarkProcessor.addDefaultWatermark(SCREEN_MIC_RECORDER.getFile().getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this)) {
-                processAndSaveHelper(scrnshootFile, onComplete);
-            } else {
-                KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
-                processAndSaveHelper(scrnshootFile, onComplete);
+
+            return;
+        }
+
+        boolean ok = WatermarkProcessor.applyWatermark(SCREEN_MIC_RECORDER.getFile().getAbsolutePath(), scrnshootFile.getAbsolutePath(), KSETTINGS, this);
+        if (!ok) {
+            KFile.copyFile(SCREEN_MIC_RECORDER.getFile(), scrnshootFile);
+        }
+
+        if (KSETTINGS.isToRecordInternalAudio() && !KSETTINGS.isToMergeInternalAudio()) {
+            try {
+                final String scrnshootFileName = KFile.getDefaultScrnshootFileName(this),
+                             audioFileName = scrnshootFile.getName().replaceAll(Constants.EXT_VIDEO_FORMAT, Constants.EXT_AUDIO_FORMAT);
+
+                final File f = new File(
+                    KSETTINGS.getSavingLocationFile(),
+                    audioFileName.replaceAll(scrnshootFileName, Objects.requireNonNull(Scrnshoot.Extra.getFileNameComplementByType(this, Scrnshoot.Extra.EXTRA_AUDIO_INTERNAL_ONLY)))
+                );
+
+                KFile.copyFile(INTERNAL_AUDIO_RECORDER.getFile(), f);
+
+                KAPTURE.addExtra(new Scrnshoot.Extra(Scrnshoot.Extra.EXTRA_AUDIO_INTERNAL_ONLY, f));
+            } catch (Exception e) {
+                Log.e(TAG, "processAndSave3: " + e.getMessage());
             }
         }
+
+        processAndSaveHelper(scrnshootFile, onComplete);
     }
 
     private void processAndSaveHelper(File scrnshootFile, Runnable onComplete) {

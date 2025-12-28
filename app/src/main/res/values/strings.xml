@@ -410,6 +410,7 @@
 
     <string name="menu_viewer_video_open_externally">Open externally</string>
     <string name="menu_viewer_video_share">@string/bottom_bar_share</string>
+    <string name="menu_viewer_video_edit">Edit</string>
 
     <string name="command">adb shell pm grant dev.dect.scrnshoot android.permission.WRITE_SECURE_SETTINGS</string>
 
